@@ -131,10 +131,11 @@
         .apply-btn-inactive { background: #cbd5e1 !important; cursor: not-allowed !important; color: #64748b !important; }
         .toast {
             position: fixed; bottom: 100px; left: 20px; right: 20px; padding: 12px 20px; border-radius: 30px; text-align: center; font-weight: bold; z-index: 300;
-            animation: fadeOutUp 0.3s ease forwards; animation-delay: 2.5s;
+            animation: fadeOutUp 0.3s ease forwards; animation-delay: 3s;
         }
         .toast-error { background: #ef4444; color: white; }
         .toast-success { background: #10b981; color: white; }
+        .toast-warning { background: #f59e0b; color: white; }
         @keyframes fadeOutUp {
             0% { opacity: 1; transform: translateY(0); }
             100% { opacity: 0; transform: translateY(-30px); visibility: hidden; }
@@ -463,6 +464,134 @@
         .copy-success {
             color: #10b981;
         }
+
+        /* Video duration badge */
+        .video-duration-badge {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+            pointer-events: none;
+        }
+
+        /* Video loader overlay */
+        .video-loader-overlay {
+            position: absolute;
+            inset: 0;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 55;
+            flex-direction: column;
+            gap: 16px;
+            border-radius: 16px;
+        }
+        .video-loader-overlay.hidden {
+            display: none;
+        }
+        .video-loader-overlay .loader {
+            width: 40px;
+            height: 40px;
+            border-width: 4px;
+        }
+        .video-loader-overlay .loader-text {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Video ad overlay in recommendations */
+        .video-ad-overlay {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+            cursor: pointer;
+            height: 100px;
+        }
+        .video-ad-overlay video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .video-ad-overlay .ad-badge {
+            position: absolute;
+            top: 6px;
+            left: 8px;
+            background: #ef4444;
+            color: white;
+            font-size: 9px;
+            font-weight: 700;
+            padding: 2px 10px;
+            border-radius: 20px;
+            letter-spacing: 0.5px;
+        }
+        .video-ad-overlay .ad-cta {
+            position: absolute;
+            bottom: 8px;
+            right: 8px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+            padding: 4px 12px;
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+        }
+
+        /* Disable video download */
+        video::-webkit-media-controls-download-button {
+            display: none !important;
+        }
+        video::-webkit-media-controls-enclosure {
+            overflow: hidden !important;
+        }
+        video::-webkit-media-controls-panel {
+            width: calc(100% + 30px) !important;
+        }
+
+        /* Mobile responsive fixes */
+        @media (max-width: 640px) {
+            .video-link-input {
+                max-width: 100%;
+                font-size: 11px;
+            }
+            .top-bar {
+                padding: 4px 12px;
+            }
+            .main-logo {
+                height: 40px;
+            }
+            .top-bar-dp {
+                width: 32px;
+                height: 32px;
+            }
+            .logout-top-btn {
+                padding: 4px 10px;
+                font-size: 11px;
+            }
+            .logout-top-btn span {
+                display: none;
+            }
+        }
+
+        /* View counter badge */
+        .view-badge {
+            font-size: 10px;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .view-badge i {
+            font-size: 12px;
+        }
     </style>
 </head>
 <body>
@@ -598,10 +727,14 @@
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
                 <div class="flex-1">
                     <div class="player-wrapper" id="playerWrapper">
-                        <video id="mainVideo" controls autoplay></video>
+                        <div id="videoLoaderOverlay" class="video-loader-overlay">
+                            <div class="loader"></div>
+                            <span class="loader-text">Loading video...</span>
+                        </div>
+                        <video id="mainVideo" controls autoplay controlsList="nodownload noremoteplayback" disablePictureInPicture></video>
                         <div id="videoAdOverlay" class="video-ad-overlay-full">
                             <span class="ad-badge-top">📢 AD</span>
-                            <video id="adVideoPlayer" muted playsinline></video>
+                            <video id="adVideoPlayer" muted playsinline controlsList="nodownload"></video>
                             <div class="ad-timer" id="adTimer">⏱ 10s</div>
                             <button class="ad-skip-btn" id="adSkipBtn" disabled>Skip Ad <i class="fa-solid fa-forward-step ml-1"></i></button>
                         </div>
@@ -609,7 +742,6 @@
                     <div class="mt-5">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <h1 id="playingTitle" class="text-2xl font-black flex-1 min-w-[200px]"></h1>
-                            <!-- Share Link Button -->
                             <button class="share-link-btn" onclick="copyVideoLink()" id="shareLinkBtn">
                                 <i class="fa-solid fa-link"></i> Share
                             </button>
@@ -625,7 +757,6 @@
                                 <button onclick="handleDislike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-down" id="dislikeIcon"></i></button>
                             </div>
                         </div>
-                        <!-- Video Link Input for Copy -->
                         <div class="mt-3 flex items-center gap-2 flex-wrap">
                             <input type="text" id="videoLinkInput" class="video-link-input" readonly value="">
                             <button onclick="copyVideoLink()" class="text-blue-600 text-sm font-bold hover:text-blue-700 transition"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
@@ -729,35 +860,68 @@
         let adSkipEnabled = false;
         let isAdPlaying = false;
         let pendingVideoToPlay = null;
+        let watchStartTime = 0;
+        let isWatchTracking = false;
+        let retryCount = 0;
 
-        // --- IP-based view deduplication ---
-        const viewedVideos = new Set();
+        // --- EARNINGS PROTECTION: Track viewed videos per user ---
+        const viewedVideos = new Map(); // videoId -> { timestamp, counted }
 
-        function getClientIP() {
-            return localStorage.getItem('clientIP') || 'local';
-        }
-
-        function hasUserViewedVideo(videoId) {
-            const key = `${videoId}_${getClientIP()}`;
-            return viewedVideos.has(key);
+        function canCountView(videoId) {
+            const now = Date.now();
+            const record = viewedVideos.get(videoId);
+            
+            // If never viewed or viewed more than 24 hours ago
+            if (!record) return true;
+            
+            // If already counted in this session, prevent
+            if (record.counted) return false;
+            
+            // If viewed within last 24 hours, prevent
+            if (now - record.timestamp < 24 * 60 * 60 * 1000) {
+                return false;
+            }
+            
+            return true;
         }
 
         function markVideoViewed(videoId) {
-            const key = `${videoId}_${getClientIP()}`;
-            viewedVideos.add(key);
+            viewedVideos.set(videoId, {
+                timestamp: Date.now(),
+                counted: true
+            });
+            // Save to localStorage for persistence
             try {
-                const stored = JSON.parse(localStorage.getItem('viewedVideos') || '[]');
-                if (!stored.includes(key)) {
-                    stored.push(key);
-                    localStorage.setItem('viewedVideos', JSON.stringify(stored));
-                }
+                const stored = JSON.parse(localStorage.getItem('viewedVideosMap') || '{}');
+                stored[videoId] = { timestamp: Date.now(), counted: true };
+                localStorage.setItem('viewedVideosMap', JSON.stringify(stored));
             } catch(e) {}
         }
 
+        // Load viewed videos from localStorage
         try {
-            const stored = JSON.parse(localStorage.getItem('viewedVideos') || '[]');
-            stored.forEach(k => viewedVideos.add(k));
+            const stored = JSON.parse(localStorage.getItem('viewedVideosMap') || '{}');
+            Object.keys(stored).forEach(key => {
+                viewedVideos.set(key, stored[key]);
+            });
         } catch(e) {}
+
+        // --- Get clean base URL for sharing ---
+        function getCleanBaseUrl() {
+            const currentUrl = window.location.href;
+            const cleanUrl = currentUrl.split('?')[0].split('#')[0];
+            if (cleanUrl.includes('glasspane.pages.dev') && cleanUrl.includes('/__vfs__/')) {
+                const baseMatch = cleanUrl.match(/^(https?:\/\/[^\/]+)(\/__vfs__\/[^\/]+\/[^\/]+)(\/)/);
+                if (baseMatch) {
+                    return baseMatch[1] + baseMatch[2] + '/';
+                }
+            }
+            return cleanUrl;
+        }
+
+        function getClientIP() {
+            return localStorage.getItem('clientIP') || 'local-' + Math.random().toString(36).substr(2, 6);
+        }
 
         // --- BAN CHECK ---
         function checkBan(userData) {
@@ -811,7 +975,7 @@
                     status: 'pending'
                 }).catch(console.error);
             }
-            showToast('Appeal sent via WhatsApp!', true);
+            showToast('Appeal sent via WhatsApp!', 'success');
         };
 
         // --- VIDEO AD SYSTEM ---
@@ -926,31 +1090,39 @@
             const linkInput = document.getElementById('videoLinkInput');
             const status = document.getElementById('copyStatus');
             if (linkInput.value) {
+                // Try native share on mobile
+                if (navigator.share) {
+                    navigator.share({
+                        title: document.getElementById('playingTitle').innerText,
+                        text: 'Watch this video on OpenView',
+                        url: linkInput.value
+                    }).catch(() => {});
+                    return;
+                }
                 navigator.clipboard.writeText(linkInput.value).then(() => {
                     status.classList.remove('hidden');
                     setTimeout(() => status.classList.add('hidden'), 2000);
-                    showToast('Link copied to clipboard!', true);
+                    showToast('Link copied to clipboard!', 'success');
                 }).catch(() => {
-                    // Fallback
                     linkInput.select();
                     document.execCommand('copy');
                     status.classList.remove('hidden');
                     setTimeout(() => status.classList.add('hidden'), 2000);
-                    showToast('Link copied!', true);
+                    showToast('Link copied!', 'success');
                 });
             }
         };
 
-        // Generate video link
+        // Generate video link with clean URL
         function generateVideoLink(videoId) {
-            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            const baseUrl = getCleanBaseUrl();
             return `${baseUrl}?watch=${videoId}`;
         }
 
         // --- WALLET ---
         window.openWalletModal = () => {
             if (!window.currentUserData) { openAuthModal(); return; }
-            if (window.currentUserData.banned) { showToast('Your account is banned. Cannot access wallet.'); return; }
+            if (window.currentUserData.banned) { showToast('Your account is banned. Cannot access wallet.', 'error'); return; }
             document.getElementById('walletModal').classList.remove('hidden');
             updateWalletUI();
             document.getElementById('withdrawReceipt').classList.add('hidden');
@@ -971,10 +1143,10 @@
             const amount = parseFloat(document.getElementById('withdrawAmountInput').value);
             const method = document.getElementById('withdrawPaymentSelect').value;
             const number = document.getElementById('withdrawNumberInput').value.trim();
-            if (isNaN(amount) || amount < 50) { showToast('Minimum withdrawal is $50'); return; }
-            if (!number || number.length < 10) { showToast('Please enter a valid mobile number'); return; }
+            if (isNaN(amount) || amount < 50) { showToast('Minimum withdrawal is $50', 'error'); return; }
+            if (!number || number.length < 10) { showToast('Please enter a valid mobile number', 'error'); return; }
             const earnings = getUserEarnings(window.currentUserData);
-            if (amount > earnings) { showToast(`You can only withdraw up to $${earnings.toFixed(2)}`); return; }
+            if (amount > earnings) { showToast(`You can only withdraw up to $${earnings.toFixed(2)}`, 'error'); return; }
             pendingWithdrawData = { amount, method, number, timestamp: new Date().toISOString() };
             document.getElementById('receiptAmount').innerText = `$${amount.toFixed(2)}`;
             document.getElementById('receiptMethod').innerText = method === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
@@ -1006,7 +1178,7 @@
                     amount: amount,
                     status: 'pending'
                 });
-                showToast(`✅ Withdrawal request of $${amount.toFixed(2)} submitted!`, true);
+                showToast(`✅ Withdrawal request of $${amount.toFixed(2)} submitted!`, 'success');
                 document.getElementById('withdrawReceipt').classList.add('hidden');
                 document.getElementById('withdrawSection').classList.remove('hidden');
                 document.getElementById('withdrawAmountInput').value = '';
@@ -1017,14 +1189,14 @@
                 updateStudioEarningsDisplay();
                 updateStudio();
             } catch(e) {
-                showToast('Error submitting request: '+e.message);
+                showToast('Error submitting request: '+e.message, 'error');
             }
         };
 
         // --- TOAST ---
-        function showToast(msg, isSuccess = false) {
+        function showToast(msg, type = 'success') {
             const toast = document.createElement('div');
-            toast.className = `toast ${isSuccess ? 'toast-success' : 'toast-error'}`;
+            toast.className = `toast toast-${type}`;
             toast.innerText = msg;
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
@@ -1040,6 +1212,33 @@
             xhr.onerror = () => reject(new Error("Network error"));
             xhr.send(formData);
         });
+
+        // --- TRACK WATCH TIME WITH PROTECTION ---
+        async function trackWatchTime(videoId, duration) {
+            const vid = window.videos.find(v => v.id === videoId);
+            if (!vid || !vid.creatorId) return;
+            
+            // Don't track if user is watching their own video
+            if (window.currentUserData && vid.creatorId === window.currentUserData.id) {
+                console.log('Not tracking own video for earnings');
+                return;
+            }
+            
+            // Only count if watched more than 30 seconds and at least 70% of video
+            const videoDuration = vid.duration || 60;
+            const minWatchTime = Math.min(30, videoDuration * 0.7);
+            
+            if (duration > minWatchTime) {
+                const hours = Math.min(duration / 3600, 2); // Max 2 hours per view
+                try {
+                    await updateDoc(doc(creatorsCol, vid.creatorId), {
+                        watchHours: increment(hours)
+                    });
+                } catch(e) {
+                    console.error('Error tracking watch time:', e);
+                }
+            }
+        }
 
         // --- FIRESTORE LISTENERS ---
         onSnapshot(bannerAdsCol, (snapshot) => {
@@ -1114,6 +1313,15 @@
                     const video = window.videos.find(v => v.id === videoId);
                     if (video) {
                         window.watchVideo(videoId);
+                    } else {
+                        const retryCheck = setInterval(() => {
+                            const v = window.videos.find(v => v.id === videoId);
+                            if (v) {
+                                clearInterval(retryCheck);
+                                window.watchVideo(videoId);
+                            }
+                        }, 500);
+                        setTimeout(() => clearInterval(retryCheck), 5000);
                     }
                 }, 500);
             }
@@ -1122,8 +1330,8 @@
         window.processAuth = async () => { 
             const email = document.getElementById('loginEmail').value.trim(); 
             const pass = document.getElementById('loginPass').value; 
-            if(!email || !pass) { showToast("Please enter email and password"); return; }
-            if(pass.length < 6) { showToast("Password must be at least 6 characters"); return; }
+            if(!email || !pass) { showToast("Please enter email and password", 'error'); return; }
+            if(pass.length < 6) { showToast("Password must be at least 6 characters", 'error'); return; }
             const btn = document.getElementById('authSubmitBtn');
             const originalText = btn.innerText;
             btn.disabled = true;
@@ -1132,22 +1340,22 @@
                 try {
                     await createUserWithEmailAndPassword(auth, email, pass);
                     closeModal('authModal');
-                    showToast("Account created! Please create your channel.", true);
+                    showToast("Account created! Please create your channel.", 'success');
                 } catch (createErr) {
                     if (createErr.code === 'auth/email-already-in-use') {
                         try {
                             await signInWithEmailAndPassword(auth, email, pass);
                             closeModal('authModal');
-                            showToast("Signed in! Welcome back.", true);
+                            showToast("Signed in! Welcome back.", 'success');
                         } catch (signInErr) {
-                            showToast("Wrong password or invalid credentials");
+                            showToast("Wrong password or invalid credentials", 'error');
                         }
                     } else {
-                        showToast(createErr.message || "Failed to create account");
+                        showToast(createErr.message || "Failed to create account", 'error');
                     }
                 }
             } catch (error) {
-                showToast(error.message || "Authentication failed");
+                showToast(error.message || "Authentication failed", 'error');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = originalText;
@@ -1156,10 +1364,10 @@
 
         window.finalizeChannel = async () => { 
             const user = auth.currentUser; 
-            if(!user) { showToast("No user logged in"); return; }
+            if(!user) { showToast("No user logged in", 'error'); return; }
             const name = document.getElementById('newChanName').value.trim(); 
             const handle = document.getElementById('newChanHandle').value.trim(); 
-            if(!name || !handle) { showToast("Channel name and handle required"); return; }
+            if(!name || !handle) { showToast("Channel name and handle required", 'error'); return; }
             const btn = document.getElementById('createChannelBtn');
             btn.disabled = true;
             btn.innerHTML = '<span class="loading-spinner"></span> Creating...';
@@ -1173,23 +1381,23 @@
                     createdAt: new Date().toISOString(), banned: false 
                 }); 
                 closeModal('createChannelModal'); 
-                showToast("Channel created! 🎉", true);
+                showToast("Channel created! 🎉", 'success');
                 const docSnap = await getDoc(doc(creatorsCol, user.uid));
                 if(docSnap.exists()) {
                     window.currentUserData = { id: user.uid, ...docSnap.data() };
                     loginSuccess();
                 }
-            } catch(e) { showToast("Failed: "+e.message); } 
+            } catch(e) { showToast("Failed: "+e.message, 'error'); } 
             finally { btn.disabled = false; btn.innerHTML = 'Create Channel'; }
         };
 
         window.publishVideo = async () => { 
             const user = auth.currentUser; 
-            if(!user || !window.currentUserData) { showToast("Sign in to upload"); return; }
-            if (window.currentUserData.banned) { showToast('Your account is banned.'); return; }
+            if(!user || !window.currentUserData) { showToast("Sign in to upload", 'error'); return; }
+            if (window.currentUserData.banned) { showToast('Your account is banned.', 'error'); return; }
             const title = document.getElementById('upTitle').value.trim(); 
             const videoFile = document.getElementById('videoInput').files[0]; 
-            if(!title || !videoFile) { showToast("Please add title and video file"); return; } 
+            if(!title || !videoFile) { showToast("Please add title and video file", 'error'); return; } 
             const btn = document.getElementById('publishBtn'); 
             const progressBox = document.getElementById('uploadProgressBox'); 
             const progressBar = document.getElementById('uploadProgressBar'); 
@@ -1200,43 +1408,89 @@
                 if(document.getElementById('thumbInput').files[0]) thumbUrl = await window.uploadToCloudinary(document.getElementById('thumbInput').files[0]); 
                 const videoUrl = await window.uploadToCloudinary(videoFile, (p) => { progressBar.style.width = `${p}%`; percentSpan.innerText = `${p}%`; }); 
                 if (videoUrl) { 
-                    await addDoc(videosCol, { creatorId: user.uid, title, thumb: thumbUrl, videoUrl, views: 0, likes: [], dislikes: [], comments: [], createdAt: new Date().toISOString() }); 
+                    // Get video duration with timeout
+                    const tempVideo = document.createElement('video');
+                    tempVideo.src = URL.createObjectURL(videoFile);
+                    const duration = await new Promise((resolve) => {
+                        const timeout = setTimeout(() => resolve(0), 10000);
+                        tempVideo.addEventListener('loadedmetadata', () => {
+                            clearTimeout(timeout);
+                            resolve(tempVideo.duration);
+                        });
+                        tempVideo.load();
+                    });
+                    URL.revokeObjectURL(tempVideo.src);
+                    
+                    await addDoc(videosCol, { 
+                        creatorId: user.uid, 
+                        title, 
+                        thumb: thumbUrl, 
+                        videoUrl, 
+                        views: 0, 
+                        likes: [], 
+                        dislikes: [], 
+                        comments: [], 
+                        duration: duration || 60,
+                        createdAt: new Date().toISOString() 
+                    }); 
                     closeModal('uploadVideoModal'); 
                     document.getElementById('upTitle').value = ''; 
                     document.getElementById('thumbInput').value = ''; 
                     document.getElementById('videoInput').value = ''; 
-                    showToast("Video published!", true);
+                    document.getElementById('thumbPreview').classList.add('hidden');
+                    showToast("Video published!", 'success');
                 } 
-            } catch(e){ showToast("Upload failed: "+e.message); } 
+            } catch(e){ showToast("Upload failed: "+e.message, 'error'); } 
             finally { btn.disabled = false; progressBox.classList.add('hidden'); } 
         };
 
-        window.handleLike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.likes?.includes(myId)) await updateDoc(vidDoc, { likes: arrayRemove(myId) }); else await updateDoc(vidDoc, { likes: arrayUnion(myId), dislikes: arrayRemove(myId) }); };
-        window.handleDislike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.dislikes?.includes(myId)) await updateDoc(vidDoc, { dislikes: arrayRemove(myId) }); else await updateDoc(vidDoc, { dislikes: arrayUnion(myId), likes: arrayRemove(myId) }); };
-        window.postComment = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.'); return; } const text = document.getElementById('commentInput').value.trim(); if(!text) return; await updateDoc(doc(videosCol, window.currentVideoId), { comments: arrayUnion({ userId: window.currentUserData.id, userName: window.currentUserData.name, userDP: window.currentUserData.dp, text, createdAt: new Date().toISOString() }) }); document.getElementById('commentInput').value = ""; };
+        window.handleLike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.likes?.includes(myId)) await updateDoc(vidDoc, { likes: arrayRemove(myId) }); else await updateDoc(vidDoc, { likes: arrayUnion(myId), dislikes: arrayRemove(myId) }); };
+        window.handleDislike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.dislikes?.includes(myId)) await updateDoc(vidDoc, { dislikes: arrayRemove(myId) }); else await updateDoc(vidDoc, { dislikes: arrayUnion(myId), likes: arrayRemove(myId) }); };
+        window.postComment = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const text = document.getElementById('commentInput').value.trim(); if(!text) return; await updateDoc(doc(videosCol, window.currentVideoId), { comments: arrayUnion({ userId: window.currentUserData.id, userName: window.currentUserData.name, userDP: window.currentUserData.dp, text, createdAt: new Date().toISOString() }) }); document.getElementById('commentInput').value = ""; };
 
+        // --- INCREMENT VIEWS WITH PROTECTION ---
         window.incrementViews = async (vidId) => {
-            if (hasUserViewedVideo(vidId)) {
-                console.log('View already counted for this IP');
-                return;
+            // Check if user is watching their own video
+            if (window.currentUserData) {
+                const vid = window.videos.find(v => v.id === vidId);
+                if (vid && vid.creatorId === window.currentUserData.id) {
+                    showToast('You cannot earn from your own videos', 'warning');
+                    return false;
+                }
             }
-            await updateDoc(doc(videosCol, vidId), { views: increment(1) });
-            markVideoViewed(vidId);
+            
+            // Check if view can be counted
+            if (!canCountView(vidId)) {
+                showToast('You already watched this video', 'warning');
+                return false;
+            }
+            
             try {
-                await addDoc(viewLogsCol, {
-                    videoId: vidId,
-                    userId: window.currentUserData?.id || 'anonymous',
-                    ip: getClientIP(),
-                    timestamp: new Date().toISOString()
-                });
-            } catch(e) {}
+                await updateDoc(doc(videosCol, vidId), { views: increment(1) });
+                markVideoViewed(vidId);
+                
+                // Log the view
+                try {
+                    await addDoc(viewLogsCol, {
+                        videoId: vidId,
+                        userId: window.currentUserData?.id || 'anonymous',
+                        ip: getClientIP(),
+                        timestamp: new Date().toISOString()
+                    });
+                } catch(e) {}
+                
+                return true;
+            } catch(e) {
+                console.error('Error incrementing views:', e);
+                return false;
+            }
         };
 
         function updateSubscribeButtonUI(targetId) { if(!window.currentUserData) return; const isSubscribed = window.currentUserData.following?.includes(targetId); const subBtn = document.getElementById('subBtn'); if(subBtn && !subBtn.classList.contains('hidden')) { subBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; subBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; } const playingSubBtn = document.getElementById('playingSubBtn'); if(playingSubBtn && !playingSubBtn.classList.contains('hidden')) { playingSubBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; playingSubBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-4 py-1.5 rounded-xl font-black text-xs`; } }
         
         window.handleSubscription = async () => { 
             if(!window.currentUserData) { openAuthModal(); return; } 
-            if (window.currentUserData.banned) { showToast('Banned account.'); return; }
+            if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; }
             const targetId = document.getElementById('chanDP').getAttribute('data-id'); 
             if(!targetId || targetId === window.currentUserData.id) return; 
             const isSubscribed = window.currentUserData.following?.includes(targetId);
@@ -1264,7 +1518,7 @@
 
         function updateSubscribersUI() { if(!window.currentUserData) return; const myFollows = window.currentUserData.following || []; const followed = window.creators.filter(c => myFollows.includes(c.id)); document.getElementById('sidebarSubsDesktop').innerHTML = followed.map(c => `<div class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-xl cursor-pointer" onclick="openChannel('${c.id}')"><img src="${c.dp}" class="w-8 h-8 rounded-full"><span class="text-sm font-bold truncate">${c.name}</span></div>`).join('') || '<p class="px-4 text-xs text-slate-400">No subscriptions</p>'; const mobileSubs = document.getElementById('mobileSubsList'); const mobileNo = document.getElementById('mobileNoSubs'); if(mobileSubs) { if(followed.length === 0) { mobileSubs.innerHTML = ''; mobileNo.classList.remove('hidden'); } else { mobileNo.classList.add('hidden'); mobileSubs.innerHTML = followed.map(c => `<div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl cursor-pointer" onclick="openChannel('${c.id}'); showView('channelView');"><img src="${c.dp}" class="w-12 h-12 rounded-full"><div><h4 class="font-black">${c.name}</h4><p class="text-xs">${c.subs || 0} subscribers</p></div></div>`).join(''); } } const studioSubs = document.getElementById('studioSubsList'); if(studioSubs) studioSubs.innerHTML = followed.map(c => `<div class="p-3 border rounded-xl flex gap-3 cursor-pointer" onclick="openChannel('${c.id}')"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-black text-sm">${c.name}</h4><p class="text-xs">${c.subs||0} subs</p></div></div>`).join('') || '<p class="col-span-full text-center py-4">No follows</p>'; }
 
-        window.handleDPUpdate = async (input) => { if (input.files[0] && window.currentUserData) { const url = await window.uploadToCloudinary(input.files[0]); if (url) await updateDoc(doc(creatorsCol, window.currentUserData.id), { dp: url }); showToast("Profile picture updated!", true); } };
+        window.handleDPUpdate = async (input) => { if (input.files[0] && window.currentUserData) { const url = await window.uploadToCloudinary(input.files[0]); if (url) await updateDoc(doc(creatorsCol, window.currentUserData.id), { dp: url }); showToast("Profile picture updated!", 'success'); } };
         window.deleteVideo = async (vidId) => { if(confirm("Delete video?")) await deleteDoc(doc(videosCol, vidId)); };
         window.handleLogout = () => signOut(auth);
 
@@ -1298,14 +1552,32 @@
             updateStudioEarningsDisplay();
         }
 
+        function formatDuration(seconds) {
+            if (!seconds || isNaN(seconds) || seconds === 0) return '0:00';
+            const mins = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            if (mins >= 60) {
+                const hrs = Math.floor(mins / 60);
+                const remainingMins = mins % 60;
+                return `${hrs}:${remainingMins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            }
+            return `${mins}:${secs.toString().padStart(2, '0')}`;
+        }
+
         function renderHome() { 
             const container = document.getElementById('homeView'); 
             if(!container) return; 
             const activeBanners = window.bannerAds.filter(ad => ad.imageUrl && ad.destinationUrl);
             const videoItems = window.videos.slice().reverse().map(v => { 
                 const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown',dp:''}; 
-                return `<div class="video-card cursor-pointer group" onclick="watchVideo('${v.id}')">
-                    <div class="aspect-video rounded-xl overflow-hidden bg-slate-100"><img src="${v.thumb}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105"></div>
+                return `<div class="video-card cursor-pointer group relative" onclick="watchVideo('${v.id}')">
+                    <div class="aspect-video rounded-xl overflow-hidden bg-slate-100 relative">
+                        <img src="${v.thumb}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
+                        <span class="video-duration-badge">${formatDuration(v.duration)}</span>
+                        <div class="absolute bottom-8 right-2 view-badge bg-black/60 text-white px-2 py-0.5 rounded text-[10px]">
+                            <i class="fa-regular fa-eye"></i> ${v.views || 0}
+                        </div>
+                    </div>
                     <div class="flex gap-3 mt-3"><img src="${c.dp}" class="w-9 h-9 rounded-full object-cover cursor-pointer" onclick="event.stopPropagation(); openChannel('${v.creatorId}')"><div><h3 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h3><p class="text-slate-500 text-xs font-bold cursor-pointer" onclick="event.stopPropagation(); openChannel('${v.creatorId}')">${c.name}</p></div></div>
                 </div>`;
             });
@@ -1341,8 +1613,13 @@
                 `;
                 adIndex++;
             }
-            if (videoItems.length === 0 && activeBanners.length === 0) finalHtml = '<div class="col-span-full py-20 text-center text-slate-400">No videos yet.</div>';
-            else if (videoItems.length === 0 && activeBanners.length > 0) {
+            if (videoItems.length === 0 && activeBanners.length === 0) {
+                finalHtml = `<div class="col-span-full py-20 text-center">
+                    <i class="fa-solid fa-video text-6xl text-slate-300 mb-4"></i>
+                    <p class="text-slate-400 font-bold">No videos yet</p>
+                    <p class="text-slate-300 text-sm">Be the first to upload!</p>
+                </div>`;
+            } else if (videoItems.length === 0 && activeBanners.length > 0) {
                 finalHtml = activeBanners.map(ad => `
                     <div class="banner-ad-card" onclick="window.open('${ad.destinationUrl}','_blank')">
                         <img src="${ad.imageUrl}" alt="${ad.title || 'ad'}">
@@ -1393,10 +1670,10 @@
                 if (item.type === 'video') {
                     const v = item.data;
                     const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'...'};
-                    return `<div class="flex gap-3 cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="w-28 aspect-video rounded-xl overflow-hidden"><img src="${v.thumb}" class="w-full h-full object-cover"></div><div><h4 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h4><p class="text-slate-500 text-xs">${c.name}</p><p class="text-slate-400 text-[10px]">${v.views||0} views</p></div></div>`;
+                    return `<div class="flex gap-3 cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="w-28 aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h4><p class="text-slate-500 text-xs">${c.name}</p><p class="text-slate-400 text-[10px]"><i class="fa-regular fa-eye mr-1"></i>${v.views||0}</p></div></div>`;
                 } else {
                     const ad = item.data;
-                    return `<div class="video-ad-overlay cursor-pointer" onclick="window.open('${ad.destinationUrl}','_blank')">
+                    return `<div class="video-ad-overlay" onclick="window.open('${ad.destinationUrl}','_blank')">
                         <video src="${ad.adUrl}" muted loop playsinline></video>
                         <span class="ad-badge">AD</span>
                         <span class="ad-cta">${ad.title || 'Learn More'} →</span>
@@ -1409,32 +1686,102 @@
             });
         }
 
-        // --- WATCH VIDEO WITH AD ---
+        // --- WATCH VIDEO WITH AD AND PROTECTION ---
         window.watchVideo = async (id) => { 
-            if (window.currentUserData?.banned) { showToast('Your account is banned.'); return; }
+            if (window.currentUserData?.banned) { showToast('Your account is banned.', 'error'); return; }
             window.currentVideoId = id; 
             const vid = window.videos.find(v=>v.id===id); 
-            if(!vid?.videoUrl) return;
+            if(!vid?.videoUrl) {
+                showToast('Video not found', 'error');
+                return;
+            }
             
             const videoEl = document.getElementById('mainVideo');
+            const loader = document.getElementById('videoLoaderOverlay');
+            
+            // Show loader
+            loader.classList.remove('hidden');
+            retryCount = 0;
+            
+            // Set video source
             videoEl.src = vid.videoUrl;
+            videoEl.load();
+            
             showView('playerView');
             renderVideoDetails(id);
             renderRecommendations(id);
             
-            // Update share link
+            // Update share link with clean URL
             const linkInput = document.getElementById('videoLinkInput');
             linkInput.value = generateVideoLink(id);
             
-            const ad = getRandomVideoAd();
-            if (ad) {
-                playVideoAd(videoEl, ad.adUrl, async () => {
+            // Show share button
+            document.getElementById('shareLinkBtn').innerHTML = `<i class="fa-solid fa-link"></i> Share`;
+            
+            // Setup watch time tracking
+            watchStartTime = Date.now();
+            isWatchTracking = false;
+            
+            // Handle video loading
+            videoEl.oncanplay = () => {
+                loader.classList.add('hidden');
+                const ad = getRandomVideoAd();
+                if (ad) {
+                    playVideoAd(videoEl, ad.adUrl, async () => {
+                        const counted = await window.incrementViews(id);
+                        if (counted) {
+                            videoEl.play().catch(() => {});
+                        } else {
+                            videoEl.play().catch(() => {});
+                        }
+                    });
+                } else {
+                    videoEl.play().catch(() => {});
                     await window.incrementViews(id);
-                });
-            } else {
-                videoEl.play().catch(() => {});
-                await window.incrementViews(id);
-            }
+                }
+            };
+            
+            videoEl.onerror = () => {
+                if (retryCount < 3) {
+                    retryCount++;
+                    loader.classList.remove('hidden');
+                    showToast(`Retrying... (${retryCount}/3)`, 'warning');
+                    setTimeout(() => {
+                        videoEl.load();
+                    }, 2000);
+                } else {
+                    loader.classList.add('hidden');
+                    showToast('Failed to load video. Please try again later.', 'error');
+                    videoEl.src = '';
+                }
+            };
+            
+            // Track watch time with protection
+            videoEl.ontimeupdate = () => {
+                if (videoEl.currentTime > 30 && !isWatchTracking) {
+                    isWatchTracking = true;
+                }
+                if (isWatchTracking) {
+                    const elapsed = (Date.now() - watchStartTime) / 1000;
+                    if (elapsed > 10) { // Track every 10 seconds
+                        trackWatchTime(id, elapsed);
+                        watchStartTime = Date.now();
+                    }
+                }
+            };
+            
+            // Track total watch time on pause/end
+            const trackTotalWatchTime = () => {
+                if (isWatchTracking) {
+                    const totalElapsed = (Date.now() - watchStartTime) / 1000;
+                    if (totalElapsed > 5) {
+                        trackWatchTime(id, totalElapsed);
+                    }
+                }
+            };
+            
+            videoEl.onpause = trackTotalWatchTime;
+            videoEl.onended = trackTotalWatchTime;
         };
 
         function renderVideoDetails(id) { 
@@ -1455,12 +1802,32 @@
             pBtn.innerText = isSubbed ? "Subscribed ✓" : "Subscribe"; 
             pBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-4 py-1.5 rounded-xl font-black text-xs`; 
             const commentsList = document.getElementById('commentsList'); 
-            commentsList.innerHTML = (vid.comments||[]).slice().reverse().map(c=>`<div class="flex gap-3"><img src="${c.userDP}" class="w-8 h-8 rounded-full"><div><p class="font-black text-xs">${c.userName}</p><p class="text-sm">${c.text}</p></div></div>`).join('') || '<p class="text-center py-4 text-slate-400">No comments yet</p>'; 
+            commentsList.innerHTML = (vid.comments||[]).slice().reverse().map((c, idx) => `<div class="flex gap-3 items-start">
+                <img src="${c.userDP}" class="w-8 h-8 rounded-full">
+                <div class="flex-1">
+                    <p class="font-black text-xs">${c.userName}</p>
+                    <p class="text-sm">${c.text}</p>
+                </div>
+                ${window.currentUserData && (c.userId === window.currentUserData.id || vid.creatorId === window.currentUserData.id) ? 
+                    `<button onclick="deleteComment('${id}', ${idx})" class="text-slate-300 hover:text-red-500 text-xs"><i class="fa-regular fa-trash-can"></i></button>` : ''
+                }
+            </div>`).join('') || '<p class="text-center py-4 text-slate-400">No comments yet</p>'; 
             
-            // Update share link
+            // Update share link with clean URL
             const linkInput = document.getElementById('videoLinkInput');
             linkInput.value = generateVideoLink(id);
         }
+
+        // Delete comment function
+        window.deleteComment = async (videoId, commentIndex) => {
+            if (!confirm('Delete this comment?')) return;
+            const vid = window.videos.find(v => v.id === videoId);
+            if (!vid) return;
+            const comments = [...(vid.comments || [])];
+            comments.splice(commentIndex, 1);
+            await updateDoc(doc(videosCol, videoId), { comments: comments });
+            showToast('Comment deleted', 'success');
+        };
 
         // --- SEARCH ---
         window.performDesktopSearch = () => {
@@ -1483,15 +1850,15 @@
         
         function openFullScreenSearch() { document.getElementById('fullScreenSearch').classList.add('open'); document.getElementById('fullSearchInput').focus(); performFullSearch(); }
         function closeFullScreenSearch() { document.getElementById('fullScreenSearch').classList.remove('open'); }
-        function performFullSearch() { const query = document.getElementById('fullSearchInput').value.toLowerCase(); const resultsDiv = document.getElementById('fullSearchResults'); if(!query.trim()) { resultsDiv.innerHTML = '<div class="text-center text-slate-400 py-10">Search for videos or channels</div>'; return; } const filteredVideos = window.videos.filter(v => v.title.toLowerCase().includes(query)); const filteredChannels = window.creators.filter(c => c.name.toLowerCase().includes(query) || (c.handle && c.handle.toLowerCase().includes(query))); let html = ''; if(filteredVideos.length) { html += '<h3 class="font-black text-lg mb-3">Videos</h3>'; filteredVideos.forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 mb-4 cursor-pointer" onclick="watchVideo('${v.id}'); closeFullScreenSearch();"><div class="w-24 h-14 bg-slate-200 rounded-lg overflow-hidden"><img src="${v.thumb}" class="w-full h-full object-cover"></div><div><h4 class="font-bold">${v.title}</h4><p class="text-xs text-slate-500">${c.name}</p></div></div>`; }); } if(filteredChannels.length) { html += '<h3 class="font-black text-lg mb-3 mt-4">Channels</h3>'; filteredChannels.forEach(c => { html += `<div class="flex items-center gap-3 mb-4 cursor-pointer" onclick="openChannel('${c.id}'); closeFullScreenSearch();"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-bold">${c.name}</h4><p class="text-xs text-slate-500">${c.handle || '@channel'}</p></div></div>`; }); } if(!filteredVideos.length && !filteredChannels.length) html = '<div class="text-center text-slate-400 py-10">No results found</div>'; resultsDiv.innerHTML = html; }
+        function performFullSearch() { const query = document.getElementById('fullSearchInput').value.toLowerCase(); const resultsDiv = document.getElementById('fullSearchResults'); if(!query.trim()) { resultsDiv.innerHTML = '<div class="text-center text-slate-400 py-10">Search for videos or channels</div>'; return; } const filteredVideos = window.videos.filter(v => v.title.toLowerCase().includes(query)); const filteredChannels = window.creators.filter(c => c.name.toLowerCase().includes(query) || (c.handle && c.handle.toLowerCase().includes(query))); let html = ''; if(filteredVideos.length) { html += '<h3 class="font-black text-lg mb-3">Videos</h3>'; filteredVideos.forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 mb-4 cursor-pointer" onclick="watchVideo('${v.id}'); closeFullScreenSearch();"><div class="w-24 h-14 bg-slate-200 rounded-lg overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold">${v.title}</h4><p class="text-xs text-slate-500">${c.name}</p></div></div>`; }); } if(filteredChannels.length) { html += '<h3 class="font-black text-lg mb-3 mt-4">Channels</h3>'; filteredChannels.forEach(c => { html += `<div class="flex items-center gap-3 mb-4 cursor-pointer" onclick="openChannel('${c.id}'); closeFullScreenSearch();"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-bold">${c.name}</h4><p class="text-xs text-slate-500">${c.handle || '@channel'}</p></div></div>`; }); } if(!filteredVideos.length && !filteredChannels.length) html = '<div class="text-center text-slate-400 py-10">No results found</div>'; resultsDiv.innerHTML = html; }
         function clearFullSearch() { document.getElementById('fullSearchInput').value = ''; performFullSearch(); }
         function showSubscriptionsView() { showView('subscriptionsView'); }
         function goBackFromChannel() { showView('homeView'); }
         function showView(viewId) { ['homeView','channelView','studioView','playerView','subscriptionsView'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); }); document.getElementById(viewId).classList.remove('hidden'); if(viewId!=='playerView' && document.getElementById('mainVideo')) { document.getElementById('mainVideo').pause(); } window.scrollTo(0,0); const ids = { homeView:'navHome', subscriptionsView:'navSubs', studioView:'navStudio', channelView:'navProfile' }; Object.keys(ids).forEach(v=>{ const el=document.getElementById(ids[v]); if(el) el.classList.remove('active'); }); if(ids[viewId]) document.getElementById(ids[viewId])?.classList.add('active'); }
-        function openChannel(id) { const creator = window.creators.find(c=>c.id===id); if(!creator) return; document.getElementById('chanName').innerText = creator.name; document.getElementById('chanHandle').innerText = `${creator.handle} • ${creator.subs||0} subscribers`; document.getElementById('chanDP').src = creator.dp; document.getElementById('chanDP').setAttribute('data-id',id); const isMe = window.currentUserData?.id === id; const isSubbed = window.currentUserData?.following?.includes(id); document.getElementById('uploadBtn').classList.toggle('hidden',!isMe); const subBtn = document.getElementById('subBtn'); subBtn.classList.toggle('hidden',isMe); if(!isMe) { subBtn.innerText = isSubbed ? "Subscribed ✓" : "Subscribe"; subBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; } const editOverlay = document.getElementById('dpEditOverlay'); if(editOverlay) { editOverlay.classList.toggle('flex',isMe); editOverlay.classList.toggle('hidden',!isMe); } const chanVideos = window.videos.filter(v=>v.creatorId===id); document.getElementById('channelVideoGrid').innerHTML = chanVideos.map(v=>`<div class="cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="aspect-video rounded-xl overflow-hidden"><img src="${v.thumb}" class="w-full h-full object-cover"></div><div class="flex justify-between items-start mt-2"><h3 class="font-bold text-sm line-clamp-1">${v.title}</h3>${isMe ? `<button onclick="event.stopPropagation(); deleteVideo('${v.id}')" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div>`).join(''); showView('channelView'); }
+        function openChannel(id) { const creator = window.creators.find(c=>c.id===id); if(!creator) return; document.getElementById('chanName').innerText = creator.name; document.getElementById('chanHandle').innerText = `${creator.handle} • ${creator.subs||0} subscribers`; document.getElementById('chanDP').src = creator.dp; document.getElementById('chanDP').setAttribute('data-id',id); const isMe = window.currentUserData?.id === id; const isSubbed = window.currentUserData?.following?.includes(id); document.getElementById('uploadBtn').classList.toggle('hidden',!isMe); const subBtn = document.getElementById('subBtn'); subBtn.classList.toggle('hidden',isMe); if(!isMe) { subBtn.innerText = isSubbed ? "Subscribed ✓" : "Subscribe"; subBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; } const editOverlay = document.getElementById('dpEditOverlay'); if(editOverlay) { editOverlay.classList.toggle('flex',isMe); editOverlay.classList.toggle('hidden',!isMe); } const chanVideos = window.videos.filter(v=>v.creatorId===id); document.getElementById('channelVideoGrid').innerHTML = chanVideos.map(v=>`<div class="cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge">${formatDuration(v.duration)}</span></div><div class="flex justify-between items-start mt-2"><h3 class="font-bold text-sm line-clamp-1">${v.title}</h3>${isMe ? `<button onclick="event.stopPropagation(); deleteVideo('${v.id}')" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div>`).join(''); showView('channelView'); }
         function triggerDPUpdate() { if(window.currentUserData && document.getElementById('chanDP').getAttribute('data-id')===window.currentUserData.id) document.getElementById('dpUpdateInput').click(); }
         function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function openUploadModal() { if(window.currentUserData) { if (window.currentUserData.banned) { showToast('Your account is banned.'); return; } document.getElementById('uploadVideoModal').classList.remove('hidden'); } else openAuthModal(); }
+        function openUploadModal() { if(window.currentUserData) { if (window.currentUserData.banned) { showToast('Your account is banned.', 'error'); return; } document.getElementById('uploadVideoModal').classList.remove('hidden'); } else openAuthModal(); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
         function openMyChannel() { if(window.currentUserData) openChannel(window.currentUserData.id); }
         function previewImage(input, targetId) { if(input.files?.[0]){ const reader=new FileReader(); reader.onload=e=>document.getElementById(targetId).src=e.target.result; reader.readAsDataURL(input.files[0]); } }
@@ -1507,9 +1874,32 @@
         }
         
         async function updateMonetizationButton() { if(!window.currentUserData) return; const subs = window.currentUserData.subs || 0; const hours = window.currentUserData.watchHours || 0; const meetsCriteria = (subs >= 1000 && hours >= 4000); const q = query(monetizationCol, where("creatorId", "==", window.currentUserData.id)); const existingSnap = await getDocs(q); let existingReq = null; existingSnap.forEach(d => { existingReq = { id: d.id, ...d.data() }; }); const btn = document.getElementById('monetizationApplyBtn'); const msgDiv = document.getElementById('monetizationStatusMsg'); if(existingReq && existingReq.status === 'approved') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-green-600 font-bold">✅ Monetization Approved! You are earning.</span>'; return; } else if(existingReq && existingReq.status === 'pending') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-yellow-600">⏳ Request pending. Admin will review.</span>'; return; } else if(existingReq && existingReq.status === 'rejected') { if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply Now'; msgDiv.innerHTML = '<span class="text-red-500">Previously rejected. Apply again.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subs & 4000 hours</span>'; } return; } if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply for Monetization'; msgDiv.innerHTML = '<span class="text-green-600">You qualify! Click Apply to request.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); btn.innerText = 'Apply'; msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subscribers & 4000 watch hours</span>'; } }
-        async function sendMonetizationRequest(btn, msgDiv, subs, hours) { if(btn.disabled) return; btn.disabled = true; btn.innerText = 'Submitting...'; try { await addDoc(monetizationCol, { creatorId: window.currentUserData.id, subscribers: subs, watchHours: hours, status: 'pending', requestedAt: new Date().toISOString() }); msgDiv.innerHTML = '<span class="text-green-600">✅ Request sent to admin! You will be notified.</span>'; btn.innerText = 'Requested'; btn.classList.add('apply-btn-inactive'); } catch(e) { console.error(e); showToast("Error submitting request"); btn.disabled = false; btn.innerText = 'Apply for Monetization'; } }
+        async function sendMonetizationRequest(btn, msgDiv, subs, hours) { if(btn.disabled) return; btn.disabled = true; btn.innerText = 'Submitting...'; try { await addDoc(monetizationCol, { creatorId: window.currentUserData.id, subscribers: subs, watchHours: hours, status: 'pending', requestedAt: new Date().toISOString() }); msgDiv.innerHTML = '<span class="text-green-600">✅ Request sent to admin! You will be notified.</span>'; btn.innerText = 'Requested'; btn.classList.add('apply-btn-inactive'); } catch(e) { console.error(e); showToast("Error submitting request", 'error'); btn.disabled = false; btn.innerText = 'Apply for Monetization'; } }
         
-        window.showView = showView; window.openChannel = openChannel; window.triggerDPUpdate = triggerDPUpdate; window.openAuthModal = openAuthModal; window.openUploadModal = openUploadModal; window.closeModal = closeModal; window.openMyChannel = openMyChannel; window.previewImage = previewImage; window.handleFileSelect = handleFileSelect; window.showSubscriptionsView = showSubscriptionsView; window.goBackFromChannel = goBackFromChannel; window.openFullScreenSearch = openFullScreenSearch; window.closeFullScreenSearch = closeFullScreenSearch; window.performFullSearch = performFullSearch; window.clearFullSearch = clearFullSearch; window.openWalletModal = openWalletModal; window.copyVideoLink = copyVideoLink;
+        window.showView = showView; window.openChannel = openChannel; window.triggerDPUpdate = triggerDPUpdate; window.openAuthModal = openAuthModal; window.openUploadModal = openUploadModal; window.closeModal = closeModal; window.openMyChannel = openMyChannel; window.previewImage = previewImage; window.handleFileSelect = handleFileSelect; window.showSubscriptionsView = showSubscriptionsView; window.goBackFromChannel = goBackFromChannel; window.openFullScreenSearch = openFullScreenSearch; window.closeFullScreenSearch = closeFullScreenSearch; window.performFullSearch = performFullSearch; window.clearFullSearch = clearFullSearch; window.openWalletModal = openWalletModal; window.copyVideoLink = copyVideoLink; window.deleteComment = deleteComment;
+        
+        // Prevent video download via right-click
+        document.addEventListener('contextmenu', function(e) {
+            if (e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+                showToast('Download disabled', 'warning');
+            }
+        });
+        
+        // Prevent drag of video
+        document.addEventListener('dragstart', function(e) {
+            if (e.target.tagName === 'VIDEO') {
+                e.preventDefault();
+            }
+        });
+
+        // Online/Offline detection
+        window.addEventListener('online', () => {
+            showToast('Back online!', 'success');
+        });
+        window.addEventListener('offline', () => {
+            showToast('You are offline. Please check your connection.', 'error');
+        });
         
         setTimeout(() => {
             renderSidebarBanner();

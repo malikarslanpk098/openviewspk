@@ -124,7 +124,7 @@
         .search-header input { flex: 1; padding: 12px 16px; background: #f1f5f9; border: none; border-radius: 30px; }
         .instant-transition { transition: all 0.12s ease-in-out; }
         button:active { transform: scale(0.97); }
-        .logout-btn-mobile { background: #ef4444; color: white; padding: 12px; border-radius: 30px; text-align: center; font-weight: bold; margin-top: 20px; cursor: pointer; }
+        .logout-btn-mobile { background: #ef4444; color: white; padding: 12px; border-radius: 30px; text-align: center; font-weight: bold; margin-top: 20px; cursor: pointer; display: none; }
         .desktop-logout-btn { background: #ef4444; color: white; padding: 10px 16px; border-radius: 30px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 8px; justify-content: center; margin-top: auto; transition: 0.2s; }
         .desktop-logout-btn:hover { background: #dc2626; }
         .apply-btn-active { background: #10b981 !important; cursor: pointer !important; color: white !important; }
@@ -407,6 +407,17 @@
         }
         .logout-top-btn:hover { background: #dc2626; }
 
+        /* earnings override badge */
+        .earnings-override-badge {
+            font-size: 10px;
+            background: #f59e0b;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 30px;
+            margin-left: 6px;
+            font-weight: 700;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.3s ease; }
@@ -444,7 +455,6 @@
             <button id="authBtn" onclick="openAuthModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold text-sm">Sign In</button>
             <div id="userProfile" class="hidden flex items-center gap-3">
                 <img id="userNavDP" src="" class="top-bar-dp" onclick="openMyChannel()">
-                <!-- Logout button in top bar (visible on both mobile & desktop when logged in) -->
                 <button id="topLogoutBtn" onclick="handleLogout()" class="logout-top-btn">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span class="hidden sm:inline">Logout</span>
@@ -470,8 +480,7 @@
                 </div>
             </a>
         </div>
-        <!-- Sidebar logout (still available but hidden by default, top bar logout is primary) -->
-        <div class="sidebar-footer hidden" id="sidebarLogoutContainer">
+        <div class="sidebar-footer hidden">
             <div id="desktopLogoutBtn" class="desktop-logout-btn hidden" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
         </div>
     </div>
@@ -506,7 +515,11 @@
                     </a>
                 </div>
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                    <div class="p-4 bg-blue-50 rounded-xl text-center"><p class="text-blue-600 font-bold text-xs">Earnings</p><h4 class="text-xl font-black text-blue-900" id="studioEarnings">$0.00</h4></div>
+                    <div class="p-4 bg-blue-50 rounded-xl text-center">
+                        <p class="text-blue-600 font-bold text-xs">Earnings</p>
+                        <h4 class="text-xl font-black text-blue-900" id="studioEarnings">$0.00</h4>
+                        <span id="earningsOverrideBadge" class="earnings-override-badge hidden">Admin Override</span>
+                    </div>
                     <div class="p-4 bg-slate-50 rounded-xl text-center"><p class="text-slate-500 font-bold text-xs">Views</p><h4 class="text-xl font-black" id="studioTotalViews">0</h4></div>
                     <div class="p-4 bg-slate-50 rounded-xl text-center"><p class="text-slate-500 font-bold text-xs">Likes</p><h4 class="text-xl font-black" id="studioTotalLikes">0</h4></div>
                     <div class="p-4 bg-slate-50 rounded-xl text-center"><p class="text-slate-500 font-bold text-xs">Comments</p><h4 class="text-xl font-black" id="studioTotalComments">0</h4></div>
@@ -527,16 +540,13 @@
                 </div>
                 <div id="monetizationStatusMsg" class="mt-4 text-xs text-center font-medium"></div>
             </div>
-            <!-- Mobile logout removed from here - now in top bar -->
         </section>
 
         <section id="playerView" class="hidden">
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row gap-6">
                 <div class="flex-1">
-                    <!-- player wrapper with ad overlay -->
                     <div class="player-wrapper" id="playerWrapper">
                         <video id="mainVideo" controls autoplay></video>
-                        <!-- Video Ad Overlay (full screen) -->
                         <div id="videoAdOverlay" class="video-ad-overlay-full">
                             <span class="ad-badge-top">📢 AD</span>
                             <video id="adVideoPlayer" muted playsinline></video>
@@ -650,6 +660,7 @@
 
         window.creators = []; window.videos = []; window.currentUserData = null; window.currentVideoId = null;
         window.bannerAds = []; window.videoAds = [];
+        window.pendingWithdrawals = []; // track pending withdrawals for this user
         let adTimerInterval = null;
         let adSkipEnabled = false;
         let isAdPlaying = false;
@@ -817,6 +828,39 @@
             return ads[Math.floor(Math.random() * ads.length)];
         }
 
+        // --- EARNINGS CALCULATION (with admin override support) ---
+        // Track total pending withdrawal amounts for this user
+        function getTotalPendingWithdrawals(creatorId) {
+            return window.pendingWithdrawals
+                .filter(w => w.creatorId === creatorId && w.status === 'pending')
+                .reduce((sum, w) => sum + (w.amount || 0), 0);
+        }
+
+        function getUserEarnings(creator) {
+            if (!creator) return 0;
+            const myVideos = window.videos.filter(v => v.creatorId === creator.id);
+            const totalViews = myVideos.reduce((a,v) => a + (v.views || 0), 0);
+            const autoEarnings = (creator.subs >= 1000 && creator.watchHours >= 4000) ? (totalViews * 0.002) : 0;
+            // If earningsOverride exists, use it
+            let earnings = (creator.earningsOverride !== undefined && creator.earningsOverride !== null) ? creator.earningsOverride : autoEarnings;
+            // Subtract pending withdrawals from earnings
+            const pendingTotal = getTotalPendingWithdrawals(creator.id);
+            const availableEarnings = Math.max(0, earnings - pendingTotal);
+            return availableEarnings;
+        }
+
+        function updateStudioEarningsDisplay() {
+            if (!window.currentUserData) return;
+            const earnings = getUserEarnings(window.currentUserData);
+            document.getElementById('studioEarnings').innerText = `$${earnings.toFixed(2)}`;
+            const badge = document.getElementById('earningsOverrideBadge');
+            if (window.currentUserData.earningsOverride !== undefined && window.currentUserData.earningsOverride !== null) {
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
         // --- WALLET ---
         window.openWalletModal = () => {
             if (!window.currentUserData) { openAuthModal(); return; }
@@ -829,11 +873,7 @@
 
         function updateWalletUI() {
             if (!window.currentUserData) return;
-            const myVideos = window.videos.filter(v => v.creatorId === window.currentUserData.id);
-            const totalViews = myVideos.reduce((a,v) => a + (v.views || 0), 0);
-            const subs = window.currentUserData.subs || 0;
-            const hours = window.currentUserData.watchHours || 0;
-            const earnings = (subs >= 1000 && hours >= 4000) ? (totalViews * 0.002) : 0;
+            const earnings = getUserEarnings(window.currentUserData);
             document.getElementById('walletBalanceDisplay').innerText = `$${earnings.toFixed(2)}`;
             document.getElementById('withdrawAmountInput').value = '';
         }
@@ -847,12 +887,8 @@
             const number = document.getElementById('withdrawNumberInput').value.trim();
             if (isNaN(amount) || amount < 50) { showToast('Minimum withdrawal is $50'); return; }
             if (!number || number.length < 10) { showToast('Please enter a valid mobile number'); return; }
-            const myVideos = window.videos.filter(v => v.creatorId === window.currentUserData.id);
-            const totalViews = myVideos.reduce((a,v) => a + (v.views || 0), 0);
-            const subs = window.currentUserData.subs || 0;
-            const hours = window.currentUserData.watchHours || 0;
-            const maxEarnings = (subs >= 1000 && hours >= 4000) ? (totalViews * 0.002) : 0;
-            if (amount > maxEarnings) { showToast(`You can only withdraw up to $${maxEarnings.toFixed(2)}`); return; }
+            const earnings = getUserEarnings(window.currentUserData);
+            if (amount > earnings) { showToast(`You can only withdraw up to $${earnings.toFixed(2)}`); return; }
             pendingWithdrawData = { amount, method, number, timestamp: new Date().toISOString() };
             document.getElementById('receiptAmount').innerText = `$${amount.toFixed(2)}`;
             document.getElementById('receiptMethod').innerText = method === 'easypaisa' ? 'EasyPaisa' : 'JazzCash';
@@ -879,6 +915,12 @@
                     status: 'pending',
                     createdAt: new Date().toISOString()
                 });
+                // Add to pending list locally so earnings update immediately
+                window.pendingWithdrawals.push({
+                    creatorId: window.currentUserData.id,
+                    amount: amount,
+                    status: 'pending'
+                });
                 showToast(`✅ Withdrawal request of $${amount.toFixed(2)} submitted!`, true);
                 document.getElementById('withdrawReceipt').classList.add('hidden');
                 document.getElementById('withdrawSection').classList.remove('hidden');
@@ -887,6 +929,8 @@
                 pendingWithdrawData = null;
                 closeModal('walletModal');
                 updateWalletUI();
+                updateStudioEarningsDisplay();
+                updateStudio(); // refresh studio view
             } catch(e) {
                 showToast('Error submitting request: '+e.message);
             }
@@ -922,13 +966,26 @@
             renderHome();
         });
 
+        // Load pending withdrawals for current user
+        onSnapshot(withdrawalCol, (snapshot) => {
+            window.pendingWithdrawals = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if (window.currentUserData) {
+                updateStudioEarningsDisplay();
+                updateWalletUI();
+                updateStudio();
+            }
+        });
+
         onSnapshot(creatorsCol, (snapshot) => {
             window.creators = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             if(window.currentUserData) { 
                 const updated = window.creators.find(c => c.id === window.currentUserData.id); 
                 if(updated) window.currentUserData = updated; 
                 checkBan(window.currentUserData);
-                updateUI(); updateStudio(); updateMonetizationButton(); 
+                updateUI(); 
+                updateStudio(); 
+                updateMonetizationButton(); 
+                updateStudioEarningsDisplay();
             }
             renderHome(); updateSubscribersUI();
             const chanId = document.getElementById('chanDP')?.getAttribute('data-id');
@@ -936,7 +993,12 @@
         });
         onSnapshot(videosCol, (snapshot) => {
             window.videos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderHome(); if(window.currentUserData) updateStudio();
+            renderHome(); 
+            if(window.currentUserData) {
+                updateStudio();
+                updateStudioEarningsDisplay();
+                updateWalletUI();
+            }
             if(!document.getElementById('channelView').classList.contains('hidden')){ const id = document.getElementById('chanDP').getAttribute('data-id'); if(id) openChannel(id); }
             if(!document.getElementById('playerView').classList.contains('hidden')){ renderRecommendations(window.currentVideoId); renderVideoDetails(window.currentVideoId); }
         });
@@ -950,6 +1012,7 @@
                     checkBan(window.currentUserData);
                     loginSuccess(); 
                     updateMonetizationButton(); 
+                    updateStudioEarningsDisplay();
                 } else { 
                     document.getElementById('createChannelModal').classList.remove('hidden'); 
                 } 
@@ -1112,11 +1175,30 @@
             document.getElementById('userProfile').classList.remove('hidden'); 
             document.getElementById('commentUserDP').src = window.currentUserData.dp; 
             document.getElementById('userNavDP').src = window.currentUserData.dp;
-            // top logout button is already visible via userProfile
             updateUI(); 
+            updateStudioEarningsDisplay();
         }
         function updateUI() { if(window.currentUserData) document.getElementById('userNavDP').src = window.currentUserData.dp; updateSubscribersUI(); }
-        function updateStudio() { if(!window.currentUserData) return; const myVids = window.videos.filter(v => v.creatorId === window.currentUserData.id); const views = myVids.reduce((a,v)=>a+(v.views||0),0); const likes = myVids.reduce((a,v)=>a+(v.likes?.length||0),0); const comments = myVids.reduce((a,v)=>a+(v.comments?.length||0),0); document.getElementById('studioTotalViews').innerText = views; document.getElementById('studioTotalLikes').innerText = likes; document.getElementById('studioTotalComments').innerText = comments; const subs = window.currentUserData.subs||0; const hours = window.currentUserData.watchHours||0; document.getElementById('studioEarnings').innerText = (subs>=1000 && hours>=4000 && views>0) ? `$${(views*0.002).toFixed(2)}` : "$0.00"; document.getElementById('subProgressTxt').innerText = `${subs} / 1,000`; document.getElementById('subProgressBar').style.width = `${Math.min((subs/1000)*100,100)}%`; document.getElementById('watchProgressTxt').innerText = `${hours} / 4,000`; document.getElementById('watchProgressBar').style.width = `${Math.min((hours/4000)*100,100)}%`; updateMonetizationButton(); }
+        function updateStudio() { 
+            if(!window.currentUserData) return; 
+            const myVids = window.videos.filter(v => v.creatorId === window.currentUserData.id); 
+            const views = myVids.reduce((a,v)=>a+(v.views||0),0); 
+            const likes = myVids.reduce((a,v)=>a+(v.likes?.length||0),0); 
+            const comments = myVids.reduce((a,v)=>a+(v.comments?.length||0),0); 
+            document.getElementById('studioTotalViews').innerText = views; 
+            document.getElementById('studioTotalLikes').innerText = likes; 
+            document.getElementById('studioTotalComments').innerText = comments; 
+            const subs = window.currentUserData.subs||0; 
+            const hours = window.currentUserData.watchHours||0; 
+            const earnings = getUserEarnings(window.currentUserData);
+            document.getElementById('studioEarnings').innerText = `$${earnings.toFixed(2)}`;
+            document.getElementById('subProgressTxt').innerText = `${subs} / 1,000`; 
+            document.getElementById('subProgressBar').style.width = `${Math.min((subs/1000)*100,100)}%`; 
+            document.getElementById('watchProgressTxt').innerText = `${hours} / 4,000`; 
+            document.getElementById('watchProgressBar').style.width = `${Math.min((hours/4000)*100,100)}%`; 
+            updateMonetizationButton(); 
+            updateStudioEarningsDisplay();
+        }
 
         function renderHome() { 
             const container = document.getElementById('homeView'); 
@@ -1311,7 +1393,6 @@
         function handleLogoutUI() { 
             document.getElementById('authBtn').style.display = 'block'; 
             document.getElementById('userProfile').classList.add('hidden'); 
-            // sidebar logout hidden
             document.getElementById('desktopLogoutBtn')?.classList.add('hidden');
             window.currentUserData = null; 
             showView('homeView'); 

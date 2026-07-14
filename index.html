@@ -604,29 +604,29 @@
             <p class="text-slate-500 text-sm">Your account has been temporarily banned</p>
             <div class="ban-reason" id="banReasonDisplay">Reason: Violation of community guidelines</div>
             <p class="text-sm text-slate-600">Ban duration: <span class="ban-duration" id="banDurationDisplay">Permanent</span></p>
-            <button class="appeal-btn mt-4" onclick="appealBan()"><i class="fa-brands fa-whatsapp mr-2"></i> Appeal via WhatsApp</button>
+            <button class="appeal-btn mt-4" id="appealBanBtn"><i class="fa-brands fa-whatsapp mr-2"></i> Appeal via WhatsApp</button>
             <p class="appeal-note">Click to send appeal request to admin on WhatsApp</p>
         </div>
     </div>
 
     <!-- TOP BAR -->
     <div class="top-bar">
-        <div class="flex items-center gap-2" onclick="showView('homeView')">
+        <div class="flex items-center gap-2" onclick="window.showView('homeView')">
             <img src="https://i.ibb.co/kghdk8v1/a83a3ea6-fa08-4b34-aa07-ea73f255d0a5-removebg-preview.png" alt="OpenView Logo" class="main-logo">
         </div>
         
         <div class="desktop-search-bar">
             <i class="fa-solid fa-search"></i>
-            <input type="text" id="desktopSearchInput" placeholder="Search videos or channels..." onkeyup="performDesktopSearch()">
-            <i class="fa-solid fa-xmark cursor-pointer" onclick="clearDesktopSearch()" style="display: none;" id="desktopClearSearch"></i>
+            <input type="text" id="desktopSearchInput" placeholder="Search videos or channels..." onkeyup="window.performDesktopSearch()">
+            <i class="fa-solid fa-xmark cursor-pointer" onclick="window.clearDesktopSearch()" style="display: none;" id="desktopClearSearch"></i>
         </div>
         
         <div class="top-bar-profile">
-            <button class="search-icon-btn md:hidden" onclick="openFullScreenSearch()"><i class="fa-solid fa-search"></i></button>
-            <button id="authBtn" onclick="openAuthModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold text-sm">Sign In</button>
+            <button class="search-icon-btn md:hidden" onclick="window.openFullScreenSearch()"><i class="fa-solid fa-search"></i></button>
+            <button id="authBtn" onclick="window.openAuthModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2 rounded-full font-bold text-sm">Sign In</button>
             <div id="userProfile" class="hidden flex items-center gap-3">
-                <img id="userNavDP" src="" class="top-bar-dp" onclick="openMyChannel()">
-                <button id="topLogoutBtn" onclick="handleLogout()" class="logout-top-btn">
+                <img id="userNavDP" src="" class="top-bar-dp" onclick="window.openMyChannel()">
+                <button id="topLogoutBtn" onclick="window.handleLogout()" class="logout-top-btn">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span class="hidden sm:inline">Logout</span>
                 </button>
@@ -637,9 +637,9 @@
     <!-- DESKTOP SIDEBAR -->
     <div class="desktop-sidebar" id="desktopSidebar">
         <div class="space-y-2">
-            <button onclick="showView('homeView')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-50 font-bold"><i class="fa-solid fa-house text-xl"></i><span>Home</span></button>
-            <button onclick="showView('studioView')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-purple-50 font-bold"><i class="fa-solid fa-chart-line text-xl"></i><span>Studio</span></button>
-            <button onclick="openUploadModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-green-50 font-bold"><i class="fa-solid fa-plus-circle text-xl"></i><span>Upload Video</span></button>
+            <button onclick="window.showView('homeView')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-blue-50 font-bold"><i class="fa-solid fa-house text-xl"></i><span>Home</span></button>
+            <button onclick="window.showView('studioView')" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-purple-50 font-bold"><i class="fa-solid fa-chart-line text-xl"></i><span>Studio</span></button>
+            <button onclick="window.openUploadModal()" class="w-full flex items-center gap-4 px-4 py-3 rounded-xl hover:bg-green-50 font-bold"><i class="fa-solid fa-plus-circle text-xl"></i><span>Upload Video</span></button>
         </div>
         <div class="mt-8"><h4 class="text-xs font-black text-slate-400 uppercase px-4 mb-4">Subscriptions</h4><div id="sidebarSubsDesktop" class="space-y-2"></div></div>
         <div id="desktopSidebarAd" class="sidebar-banner hidden">
@@ -652,21 +652,21 @@
             </a>
         </div>
         <div class="sidebar-footer hidden">
-            <div id="desktopLogoutBtn" class="desktop-logout-btn hidden" onclick="handleLogout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
+            <div id="desktopLogoutBtn" class="desktop-logout-btn hidden" onclick="window.handleLogout()"><i class="fa-solid fa-right-from-bracket"></i><span>Logout</span></div>
         </div>
     </div>
 
     <!-- BOTTOM NAV -->
     <div class="bottom-nav">
-        <div class="nav-item" onclick="showView('homeView')" id="navHome"><i class="fa-solid fa-house"></i><span>Home</span></div>
-        <div class="nav-item" onclick="showSubscriptionsView()" id="navSubs"><i class="fa-solid fa-bell"></i><span>Subs</span></div>
-        <div class="nav-item create-btn" onclick="openUploadModal()"><i class="fa-solid fa-plus"></i><span>Create</span></div>
-        <div class="nav-item" onclick="showView('studioView')" id="navStudio"><i class="fa-solid fa-chart-line"></i><span>Studio</span></div>
-        <div class="nav-item" onclick="openMyChannel()" id="navProfile"><i class="fa-solid fa-user"></i><span>Channel</span></div>
+        <div class="nav-item" onclick="window.showView('homeView')" id="navHome"><i class="fa-solid fa-house"></i><span>Home</span></div>
+        <div class="nav-item" onclick="window.showSubscriptionsView()" id="navSubs"><i class="fa-solid fa-bell"></i><span>Subs</span></div>
+        <div class="nav-item create-btn" onclick="window.openUploadModal()"><i class="fa-solid fa-plus"></i><span>Create</span></div>
+        <div class="nav-item" onclick="window.showView('studioView')" id="navStudio"><i class="fa-solid fa-chart-line"></i><span>Studio</span></div>
+        <div class="nav-item" onclick="window.openMyChannel()" id="navProfile"><i class="fa-solid fa-user"></i><span>Channel</span></div>
     </div>
 
     <!-- SEARCH OVERLAY -->
-    <div id="fullScreenSearch" class="search-full-page"><div class="search-header"><button class="back-btn" onclick="closeFullScreenSearch()"><i class="fa-solid fa-arrow-left"></i></button><input type="text" id="fullSearchInput" placeholder="Search videos or channels..." autocomplete="off" onkeyup="performFullSearch()"><button onclick="clearFullSearch()"><i class="fa-solid fa-xmark"></i></button></div><div class="search-results" id="fullSearchResults"></div></div>
+    <div id="fullScreenSearch" class="search-full-page"><div class="search-header"><button class="back-btn" onclick="window.closeFullScreenSearch()"><i class="fa-solid fa-arrow-left"></i></button><input type="text" id="fullSearchInput" placeholder="Search videos or channels..." autocomplete="off" onkeyup="window.performFullSearch()"><button onclick="window.clearFullSearch()"><i class="fa-solid fa-xmark"></i></button></div><div class="search-results" id="fullSearchResults"></div></div>
 
     <div id="desktopSearchResults" class="fixed bg-white shadow-xl rounded-2xl w-80 z-50 hidden max-h-96 overflow-y-auto border border-slate-200" style="top: 75px; left: 50%; transform: translateX(-50%);"></div>
 
@@ -675,11 +675,11 @@
         <section id="homeView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 gap-y-8"></section>
         <section id="subscriptionsView" class="hidden max-w-3xl mx-auto"><h2 class="text-2xl font-black mb-6">Your Subscriptions</h2><div id="mobileSubsList" class="space-y-4"></div><div id="mobileNoSubs" class="text-center py-10 text-slate-400 font-bold hidden">No subscriptions yet</div></section>
         <section id="channelView" class="hidden max-w-6xl mx-auto">
-            <button onclick="goBackFromChannel()" class="mb-6 flex items-center gap-2 text-slate-500 font-bold"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <button onclick="window.goBackFromChannel()" class="mb-6 flex items-center gap-2 text-slate-500 font-bold"><i class="fa-solid fa-arrow-left"></i> Back</button>
             <div class="flex flex-col md:flex-row items-center gap-8 px-4 mb-12">
-                <div class="relative group"><img id="chanDP" src="" class="w-36 h-36 rounded-full border-4 shadow-xl object-cover" data-id=""><div id="dpEditOverlay" class="absolute inset-0 bg-black/40 rounded-full hidden items-center justify-center text-white cursor-pointer opacity-0 group-hover:opacity-100" onclick="triggerDPUpdate()"><i class="fa-solid fa-camera text-xl"></i></div><input type="file" id="dpUpdateInput" class="hidden" accept="image/*" onchange="handleDPUpdate(this)"></div>
+                <div class="relative group"><img id="chanDP" src="" class="w-36 h-36 rounded-full border-4 shadow-xl object-cover" data-id=""><div id="dpEditOverlay" class="absolute inset-0 bg-black/40 rounded-full hidden items-center justify-center text-white cursor-pointer opacity-0 group-hover:opacity-100" onclick="window.triggerDPUpdate()"><i class="fa-solid fa-camera text-xl"></i></div><input type="file" id="dpUpdateInput" class="hidden" accept="image/*" onchange="window.handleDPUpdate(this)"></div>
                 <div class="flex-1 text-center md:text-left"><h2 id="chanName" class="text-3xl md:text-4xl font-black">...</h2><p id="chanHandle" class="text-slate-500 font-bold mt-2">@handle</p></div>
-                <div class="flex gap-4 flex-wrap"><button id="uploadBtn" onclick="openUploadModal()" class="hidden bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm">Upload</button><button id="subBtn" onclick="handleSubscription()" class="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm instant-transition">Subscribe</button></div>
+                <div class="flex gap-4 flex-wrap"><button id="uploadBtn" onclick="window.openUploadModal()" class="hidden bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm">Upload</button><button id="subBtn" onclick="window.handleSubscription()" class="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm instant-transition">Subscribe</button></div>
             </div>
             <div class="border-b border-slate-100 mb-6"></div>
             <h3 class="text-xl font-black mb-5 px-4">Videos</h3>
@@ -690,7 +690,7 @@
             <div class="bg-white border rounded-2xl p-6 shadow-sm">
                 <div class="flex justify-between items-center mb-6">
                     <h3 class="text-2xl font-black">Studio Analytics</h3>
-                    <a href="#" onclick="openWalletModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
+                    <a href="#" onclick="window.openWalletModal()" class="bg-gradient-to-r from-amber-500 to-orange-500 text-white px-5 py-2.5 rounded-xl font-bold shadow-md hover:shadow-lg transition-all flex items-center gap-2">
                         <i class="fa-solid fa-wallet text-lg"></i>
                         <span>Wallet</span>
                     </a>
@@ -742,24 +742,24 @@
                     <div class="mt-5">
                         <div class="flex flex-wrap items-start justify-between gap-3">
                             <h1 id="playingTitle" class="text-2xl font-black flex-1 min-w-[200px]"></h1>
-                            <button class="share-link-btn" onclick="copyVideoLink()" id="shareLinkBtn">
+                            <button class="share-link-btn" onclick="window.copyVideoLink()" id="shareLinkBtn">
                                 <i class="fa-solid fa-link"></i> Share
                             </button>
                         </div>
                         <div class="flex flex-wrap items-center justify-between mt-4 gap-3">
                             <div class="flex items-center gap-3">
-                                <img id="playingChanDP" class="w-10 h-10 rounded-full cursor-pointer" onclick="openCreatorFromPlayer()">
-                                <div><p id="playingChanName" class="font-black cursor-pointer hover:text-blue-600" onclick="openCreatorFromPlayer()"></p></div>
-                                <button id="playingSubBtn" onclick="handleSubscriptionFromPlayer()" class="bg-black text-white px-4 py-1.5 rounded-xl font-black text-xs instant-transition">Subscribe</button>
+                                <img id="playingChanDP" class="w-10 h-10 rounded-full cursor-pointer" onclick="window.openCreatorFromPlayer()">
+                                <div><p id="playingChanName" class="font-black cursor-pointer hover:text-blue-600" onclick="window.openCreatorFromPlayer()"></p></div>
+                                <button id="playingSubBtn" onclick="window.handleSubscriptionFromPlayer()" class="bg-black text-white px-4 py-1.5 rounded-xl font-black text-xs instant-transition">Subscribe</button>
                             </div>
                             <div class="flex gap-2">
-                                <button onclick="handleLike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-up" id="likeIcon"></i> <span id="likeCount">0</span></button>
-                                <button onclick="handleDislike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-down" id="dislikeIcon"></i></button>
+                                <button onclick="window.handleLike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-up" id="likeIcon"></i> <span id="likeCount">0</span></button>
+                                <button onclick="window.handleDislike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-down" id="dislikeIcon"></i></button>
                             </div>
                         </div>
                         <div class="mt-3 flex items-center gap-2 flex-wrap">
                             <input type="text" id="videoLinkInput" class="video-link-input" readonly value="">
-                            <button onclick="copyVideoLink()" class="text-blue-600 text-sm font-bold hover:text-blue-700 transition"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                            <button onclick="window.copyVideoLink()" class="text-blue-600 text-sm font-bold hover:text-blue-700 transition"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
                             <span id="copyStatus" class="text-xs text-green-600 hidden">✓ Copied!</span>
                         </div>
                         <div class="mt-6 bg-slate-50 rounded-2xl p-5">
@@ -768,7 +768,7 @@
                                 <img id="commentUserDP" class="w-8 h-8 rounded-full">
                                 <div class="flex-1">
                                     <input type="text" id="commentInput" placeholder="Write a comment..." class="w-full bg-white border-b py-1 outline-none">
-                                    <div class="flex justify-end mt-2"><button onclick="postComment()" class="bg-blue-600 text-white px-4 py-1.5 rounded-xl text-xs font-black">Post</button></div>
+                                    <div class="flex justify-end mt-2"><button onclick="window.postComment()" class="bg-blue-600 text-white px-4 py-1.5 rounded-xl text-xs font-black">Post</button></div>
                                 </div>
                             </div>
                             <div id="commentsList" class="space-y-4"></div>
@@ -784,18 +784,18 @@
     </main>
 
     <!-- AUTH MODAL -->
-    <div id="authModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-md rounded-3xl p-8 relative"><button onclick="closeModal('authModal')" class="absolute right-5 top-5"><i class="fa-solid fa-xmark text-2xl"></i></button><h2 class="text-2xl font-black mb-4">Welcome to OpenView</h2><input id="loginEmail" type="email" placeholder="Email address" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><input id="loginPass" type="password" placeholder="Password (min 6 characters)" class="w-full p-3 bg-slate-100 rounded-xl mb-4"><button id="authSubmitBtn" onclick="processAuth()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black hover:bg-blue-700 transition">Create Account / Sign In</button><p class="text-xs text-center text-slate-500 mt-4">✨ New email? Just enter email and password - account created automatically</p></div></div>
+    <div id="authModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-md rounded-3xl p-8 relative"><button onclick="window.closeModal('authModal')" class="absolute right-5 top-5"><i class="fa-solid fa-xmark text-2xl"></i></button><h2 class="text-2xl font-black mb-4">Welcome to OpenView</h2><input id="loginEmail" type="email" placeholder="Email address" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><input id="loginPass" type="password" placeholder="Password (min 6 characters)" class="w-full p-3 bg-slate-100 rounded-xl mb-4"><button id="authSubmitBtn" onclick="window.processAuth()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black hover:bg-blue-700 transition">Create Account / Sign In</button><p class="text-xs text-center text-slate-500 mt-4">✨ New email? Just enter email and password - account created automatically</p></div></div>
     
     <!-- CREATE CHANNEL MODAL -->
-    <div id="createChannelModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-md rounded-3xl p-8"><h2 class="text-2xl font-black mb-4">Create Your Channel</h2><div class="relative w-24 h-24 mx-auto mb-4"><img id="previewDP" class="w-full h-full rounded-full object-cover bg-slate-100" src="https://cdn-icons-png.flaticon.com/512/149/149071.png"><label class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer"><i class="fa-solid fa-camera text-white text-xs"></i><input type="file" class="hidden" accept="image/*" onchange="previewImage(this,'previewDP')"></label></div><input id="newChanName" placeholder="Channel Name" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><input id="newChanHandle" placeholder="@username" class="w-full p-3 bg-slate-100 rounded-xl mb-4"><button id="createChannelBtn" onclick="finalizeChannel()" class="w-full bg-black text-white py-3 rounded-xl font-black">Create Channel</button></div></div>
+    <div id="createChannelModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-md rounded-3xl p-8"><h2 class="text-2xl font-black mb-4">Create Your Channel</h2><div class="relative w-24 h-24 mx-auto mb-4"><img id="previewDP" class="w-full h-full rounded-full object-cover bg-slate-100" src="https://cdn-icons-png.flaticon.com/512/149/149071.png"><label class="absolute bottom-0 right-0 bg-blue-600 p-2 rounded-full cursor-pointer"><i class="fa-solid fa-camera text-white text-xs"></i><input type="file" class="hidden" accept="image/*" onchange="window.previewImage(this,'previewDP')"></label></div><input id="newChanName" placeholder="Channel Name" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><input id="newChanHandle" placeholder="@username" class="w-full p-3 bg-slate-100 rounded-xl mb-4"><button id="createChannelBtn" onclick="window.finalizeChannel()" class="w-full bg-black text-white py-3 rounded-xl font-black">Create Channel</button></div></div>
     
     <!-- UPLOAD MODAL -->
-    <div id="uploadVideoModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-lg rounded-3xl p-6"><div class="modal-header flex items-center gap-3 mb-4"><button class="modal-back-btn" onclick="closeModal('uploadVideoModal')"><i class="fa-solid fa-arrow-left text-2xl"></i></button><h2 class="text-2xl font-black">Upload Video</h2></div><input id="upTitle" placeholder="Video Title" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><div class="grid grid-cols-2 gap-3 mb-4"><div class="border-2 border-dashed rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('thumbInput').click()"><i class="fa-solid fa-image text-2xl text-slate-400"></i><p class="text-xs mt-1" id="thumbFileName">Thumbnail</p><input type="file" id="thumbInput" class="hidden" accept="image/*" onchange="handleFileSelect(this,'thumbFileName','thumbPreview')"><img id="thumbPreview" class="hidden w-full h-20 object-cover rounded mt-1"></div><div class="border-2 border-dashed rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('videoInput').click()"><i class="fa-solid fa-video text-2xl text-slate-400"></i><p class="text-xs mt-1" id="videoFileName">Video File</p><input type="file" id="videoInput" class="hidden" accept="video/*" onchange="handleFileSelect(this,'videoFileName')"></div></div><div id="uploadProgressBox" class="hidden mb-4"><div class="flex justify-between text-sm"><span id="uploadStatusText">Uploading...</span><span id="uploadPercentage">0%</span></div><div class="w-full h-2 bg-slate-200 rounded-full mt-1"><div id="uploadProgressBar" class="h-full bg-blue-600 w-0 transition-all rounded-full"></div></div></div><button id="publishBtn" onclick="publishVideo()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Publish Video</button></div></div>
+    <div id="uploadVideoModal" class="fixed inset-0 z-[100] modal-bg hidden flex items-center justify-center p-4"><div class="bg-white w-full max-w-lg rounded-3xl p-6"><div class="modal-header flex items-center gap-3 mb-4"><button class="modal-back-btn" onclick="window.closeModal('uploadVideoModal')"><i class="fa-solid fa-arrow-left text-2xl"></i></button><h2 class="text-2xl font-black">Upload Video</h2></div><input id="upTitle" placeholder="Video Title" class="w-full p-3 bg-slate-100 rounded-xl mb-3"><div class="grid grid-cols-2 gap-3 mb-4"><div class="border-2 border-dashed rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('thumbInput').click()"><i class="fa-solid fa-image text-2xl text-slate-400"></i><p class="text-xs mt-1" id="thumbFileName">Thumbnail</p><input type="file" id="thumbInput" class="hidden" accept="image/*" onchange="window.handleFileSelect(this,'thumbFileName','thumbPreview')"><img id="thumbPreview" class="hidden w-full h-20 object-cover rounded mt-1"></div><div class="border-2 border-dashed rounded-xl p-3 text-center cursor-pointer" onclick="document.getElementById('videoInput').click()"><i class="fa-solid fa-video text-2xl text-slate-400"></i><p class="text-xs mt-1" id="videoFileName">Video File</p><input type="file" id="videoInput" class="hidden" accept="video/*" onchange="window.handleFileSelect(this,'videoFileName')"></div></div><div id="uploadProgressBox" class="hidden mb-4"><div class="flex justify-between text-sm"><span id="uploadStatusText">Uploading...</span><span id="uploadPercentage">0%</span></div><div class="w-full h-2 bg-slate-200 rounded-full mt-1"><div id="uploadProgressBar" class="h-full bg-blue-600 w-0 transition-all rounded-full"></div></div></div><button id="publishBtn" onclick="window.publishVideo()" class="w-full bg-blue-600 text-white py-3 rounded-xl font-black">Publish Video</button></div></div>
 
     <!-- WALLET MODAL -->
     <div id="walletModal" class="fixed inset-0 z-[200] modal-bg hidden flex items-center justify-center p-4" style="backdrop-filter: blur(8px);">
         <div class="bg-white w-full max-w-lg rounded-3xl p-6 relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal('walletModal')" class="absolute right-5 top-5"><i class="fa-solid fa-xmark text-2xl"></i></button>
+            <button onclick="window.closeModal('walletModal')" class="absolute right-5 top-5"><i class="fa-solid fa-xmark text-2xl"></i></button>
             <h2 class="text-2xl font-black mb-4">💰 Wallet</h2>
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-5 rounded-2xl mb-5">
                 <p class="text-slate-500 text-sm">Available Balance</p>
@@ -807,7 +807,7 @@
                 <div class="mb-4"><label class="block text-sm font-bold mb-1">Amount ($)</label><input type="number" id="withdrawAmountInput" placeholder="Enter amount (min $50)" class="w-full p-3 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500" min="50"></div>
                 <div class="mb-4"><label class="block text-sm font-bold mb-1">Payment Method</label><select id="withdrawPaymentSelect" class="w-full p-3 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"><option value="easypaisa">EasyPaisa</option><option value="jazzcash">JazzCash</option></select></div>
                 <div class="mb-4" id="withdrawNumberField"><label class="block text-sm font-bold mb-1">Mobile Number (03xxxxxxxxx)</label><input type="text" id="withdrawNumberInput" placeholder="Enter your mobile number" class="w-full p-3 bg-slate-100 rounded-xl outline-none focus:ring-2 focus:ring-blue-500"></div>
-                <button onclick="submitWithdrawRequest()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black hover:bg-green-700 transition">Request Withdrawal</button>
+                <button onclick="window.submitWithdrawRequest()" class="w-full bg-green-600 text-white py-3 rounded-xl font-black hover:bg-green-700 transition">Request Withdrawal</button>
             </div>
             <div id="withdrawReceipt" class="hidden mt-6 border-t pt-4">
                 <div class="receipt-card p-0">
@@ -816,7 +816,7 @@
                     <div class="receipt-row"><span class="label">Method</span><span class="value" id="receiptMethod">-</span></div>
                     <div class="receipt-row"><span class="label">Account</span><span class="value" id="receiptAccount">-</span></div>
                     <div class="receipt-row"><span class="label">Status</span><span class="value text-yellow-600">⏳ Pending</span></div>
-                    <div class="receipt-actions"><button class="btn-edit" onclick="editWithdraw()"><i class="fa-regular fa-pen-to-square mr-1"></i> Edit</button><button class="btn-confirm" onclick="confirmWithdraw()"><i class="fa-regular fa-circle-check mr-1"></i> Confirm & Send</button></div>
+                    <div class="receipt-actions"><button class="btn-edit" onclick="window.editWithdraw()"><i class="fa-regular fa-pen-to-square mr-1"></i> Edit</button><button class="btn-confirm" onclick="window.confirmWithdraw()"><i class="fa-regular fa-circle-check mr-1"></i> Confirm & Send</button></div>
                     <p class="text-[10px] text-slate-400 text-center mt-3">Please recheck your details before confirming</p>
                 </div>
             </div>
@@ -853,9 +853,15 @@
         const banAppealsCol = collection(db, 'artifacts', appId, 'public', 'data', 'banAppeals');
         const viewLogsCol = collection(db, 'artifacts', appId, 'public', 'data', 'viewLogs');
 
-        window.creators = []; window.videos = []; window.currentUserData = null; window.currentVideoId = null;
-        window.bannerAds = []; window.videoAds = [];
+        // Global state
+        window.creators = []; 
+        window.videos = []; 
+        window.currentUserData = null; 
+        window.currentVideoId = null;
+        window.bannerAds = []; 
+        window.videoAds = [];
         window.pendingWithdrawals = [];
+        
         let adTimerInterval = null;
         let adSkipEnabled = false;
         let isAdPlaying = false;
@@ -865,23 +871,16 @@
         let retryCount = 0;
 
         // --- EARNINGS PROTECTION: Track viewed videos per user ---
-        const viewedVideos = new Map(); // videoId -> { timestamp, counted }
+        const viewedVideos = new Map();
 
         function canCountView(videoId) {
             const now = Date.now();
             const record = viewedVideos.get(videoId);
-            
-            // If never viewed or viewed more than 24 hours ago
             if (!record) return true;
-            
-            // If already counted in this session, prevent
             if (record.counted) return false;
-            
-            // If viewed within last 24 hours, prevent
             if (now - record.timestamp < 24 * 60 * 60 * 1000) {
                 return false;
             }
-            
             return true;
         }
 
@@ -890,7 +889,6 @@
                 timestamp: Date.now(),
                 counted: true
             });
-            // Save to localStorage for persistence
             try {
                 const stored = JSON.parse(localStorage.getItem('viewedVideosMap') || '{}');
                 stored[videoId] = { timestamp: Date.now(), counted: true };
@@ -898,7 +896,6 @@
             } catch(e) {}
         }
 
-        // Load viewed videos from localStorage
         try {
             const stored = JSON.parse(localStorage.getItem('viewedVideosMap') || '{}');
             Object.keys(stored).forEach(key => {
@@ -922,6 +919,16 @@
         function getClientIP() {
             return localStorage.getItem('clientIP') || 'local-' + Math.random().toString(36).substr(2, 6);
         }
+
+        // --- TOAST ---
+        function showToast(msg, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        window.showToast = showToast;
 
         // --- BAN CHECK ---
         function checkBan(userData) {
@@ -955,7 +962,7 @@
         }
 
         // --- APPEAL ---
-        window.appealBan = () => {
+        window.appealBan = function() {
             const user = auth.currentUser;
             if (!user) { alert('Please sign in first.'); return; }
             const name = window.currentUserData?.name || 'User';
@@ -1090,7 +1097,6 @@
             const linkInput = document.getElementById('videoLinkInput');
             const status = document.getElementById('copyStatus');
             if (linkInput.value) {
-                // Try native share on mobile
                 if (navigator.share) {
                     navigator.share({
                         title: document.getElementById('playingTitle').innerText,
@@ -1120,8 +1126,8 @@
         }
 
         // --- WALLET ---
-        window.openWalletModal = () => {
-            if (!window.currentUserData) { openAuthModal(); return; }
+        window.openWalletModal = function() {
+            if (!window.currentUserData) { window.openAuthModal(); return; }
             if (window.currentUserData.banned) { showToast('Your account is banned. Cannot access wallet.', 'error'); return; }
             document.getElementById('walletModal').classList.remove('hidden');
             updateWalletUI();
@@ -1138,8 +1144,8 @@
 
         let pendingWithdrawData = null;
 
-        window.submitWithdrawRequest = () => {
-            if (!window.currentUserData) { openAuthModal(); return; }
+        window.submitWithdrawRequest = function() {
+            if (!window.currentUserData) { window.openAuthModal(); return; }
             const amount = parseFloat(document.getElementById('withdrawAmountInput').value);
             const method = document.getElementById('withdrawPaymentSelect').value;
             const number = document.getElementById('withdrawNumberInput').value.trim();
@@ -1155,13 +1161,13 @@
             document.getElementById('withdrawReceipt').classList.remove('hidden');
         };
 
-        window.editWithdraw = () => {
+        window.editWithdraw = function() {
             document.getElementById('withdrawReceipt').classList.add('hidden');
             document.getElementById('withdrawSection').classList.remove('hidden');
             pendingWithdrawData = null;
         };
 
-        window.confirmWithdraw = async () => {
+        window.confirmWithdraw = async function() {
             if (!pendingWithdrawData || !window.currentUserData) return;
             const { amount, method, number } = pendingWithdrawData;
             try {
@@ -1184,7 +1190,7 @@
                 document.getElementById('withdrawAmountInput').value = '';
                 document.getElementById('withdrawNumberInput').value = '';
                 pendingWithdrawData = null;
-                closeModal('walletModal');
+                window.closeModal('walletModal');
                 updateWalletUI();
                 updateStudioEarningsDisplay();
                 updateStudio();
@@ -1193,43 +1199,35 @@
             }
         };
 
-        // --- TOAST ---
-        function showToast(msg, type = 'success') {
-            const toast = document.createElement('div');
-            toast.className = `toast toast-${type}`;
-            toast.innerText = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
-        }
-
         // --- CLOUDINARY ---
-        window.uploadToCloudinary = (file, onProgress) => new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest(); const formData = new FormData();
-            formData.append('file', file); formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
-            xhr.open('POST', CLOUDINARY_URL, true);
-            xhr.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100)); };
-            xhr.onload = () => { if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).secure_url); else reject(new Error("Upload failed")); };
-            xhr.onerror = () => reject(new Error("Network error"));
-            xhr.send(formData);
-        });
+        window.uploadToCloudinary = function(file, onProgress) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest(); 
+                const formData = new FormData();
+                formData.append('file', file); 
+                formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+                xhr.open('POST', CLOUDINARY_URL, true);
+                xhr.upload.onprogress = (e) => { if (e.lengthComputable && onProgress) onProgress(Math.round((e.loaded / e.total) * 100)); };
+                xhr.onload = () => { if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).secure_url); else reject(new Error("Upload failed")); };
+                xhr.onerror = () => reject(new Error("Network error"));
+                xhr.send(formData);
+            });
+        };
 
         // --- TRACK WATCH TIME WITH PROTECTION ---
         async function trackWatchTime(videoId, duration) {
             const vid = window.videos.find(v => v.id === videoId);
             if (!vid || !vid.creatorId) return;
             
-            // Don't track if user is watching their own video
             if (window.currentUserData && vid.creatorId === window.currentUserData.id) {
-                console.log('Not tracking own video for earnings');
                 return;
             }
             
-            // Only count if watched more than 30 seconds and at least 70% of video
             const videoDuration = vid.duration || 60;
             const minWatchTime = Math.min(30, videoDuration * 0.7);
             
             if (duration > minWatchTime) {
-                const hours = Math.min(duration / 3600, 2); // Max 2 hours per view
+                const hours = Math.min(duration / 3600, 2);
                 try {
                     await updateDoc(doc(creatorsCol, vid.creatorId), {
                         watchHours: increment(hours)
@@ -1240,11 +1238,46 @@
             }
         }
 
+        // --- INCREMENT VIEWS WITH PROTECTION ---
+        window.incrementViews = async function(vidId) {
+            if (window.currentUserData) {
+                const vid = window.videos.find(v => v.id === vidId);
+                if (vid && vid.creatorId === window.currentUserData.id) {
+                    showToast('You cannot earn from your own videos', 'warning');
+                    return false;
+                }
+            }
+            
+            if (!canCountView(vidId)) {
+                showToast('You already watched this video', 'warning');
+                return false;
+            }
+            
+            try {
+                await updateDoc(doc(videosCol, vidId), { views: increment(1) });
+                markVideoViewed(vidId);
+                try {
+                    await addDoc(viewLogsCol, {
+                        videoId: vidId,
+                        userId: window.currentUserData?.id || 'anonymous',
+                        ip: getClientIP(),
+                        timestamp: new Date().toISOString()
+                    });
+                } catch(e) {}
+                return true;
+            } catch(e) {
+                console.error('Error incrementing views:', e);
+                return false;
+            }
+        };
+
         // --- FIRESTORE LISTENERS ---
         onSnapshot(bannerAdsCol, (snapshot) => {
             window.bannerAds = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-            renderHome(); renderSidebarBanner();
+            renderHome(); 
+            renderSidebarBanner();
         });
+        
         onSnapshot(videoAdsCol, (snapshot) => {
             window.videoAds = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             renderHome();
@@ -1270,10 +1303,12 @@
                 updateMonetizationButton(); 
                 updateStudioEarningsDisplay();
             }
-            renderHome(); updateSubscribersUI();
+            renderHome(); 
+            updateSubscribersUI();
             const chanId = document.getElementById('chanDP')?.getAttribute('data-id');
             if(chanId && !document.getElementById('channelView').classList.contains('hidden')) updateSubscribeButtonUI(chanId);
         });
+        
         onSnapshot(videosCol, (snapshot) => {
             window.videos = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             renderHome(); 
@@ -1282,8 +1317,14 @@
                 updateStudioEarningsDisplay();
                 updateWalletUI();
             }
-            if(!document.getElementById('channelView').classList.contains('hidden')){ const id = document.getElementById('chanDP').getAttribute('data-id'); if(id) openChannel(id); }
-            if(!document.getElementById('playerView').classList.contains('hidden')){ renderRecommendations(window.currentVideoId); renderVideoDetails(window.currentVideoId); }
+            if(!document.getElementById('channelView').classList.contains('hidden')){ 
+                const id = document.getElementById('chanDP').getAttribute('data-id'); 
+                if(id) window.openChannel(id); 
+            }
+            if(!document.getElementById('playerView').classList.contains('hidden')){ 
+                renderRecommendations(window.currentVideoId); 
+                renderVideoDetails(window.currentVideoId); 
+            }
         });
 
         // --- AUTH ---
@@ -1304,7 +1345,7 @@
             } 
         });
 
-        // Check URL for watch parameter (direct video link)
+        // Check URL for watch parameter
         function checkUrlForVideo() {
             const params = new URLSearchParams(window.location.search);
             const videoId = params.get('watch');
@@ -1327,7 +1368,7 @@
             }
         }
 
-        window.processAuth = async () => { 
+        window.processAuth = async function() { 
             const email = document.getElementById('loginEmail').value.trim(); 
             const pass = document.getElementById('loginPass').value; 
             if(!email || !pass) { showToast("Please enter email and password", 'error'); return; }
@@ -1339,13 +1380,13 @@
             try { 
                 try {
                     await createUserWithEmailAndPassword(auth, email, pass);
-                    closeModal('authModal');
+                    window.closeModal('authModal');
                     showToast("Account created! Please create your channel.", 'success');
                 } catch (createErr) {
                     if (createErr.code === 'auth/email-already-in-use') {
                         try {
                             await signInWithEmailAndPassword(auth, email, pass);
-                            closeModal('authModal');
+                            window.closeModal('authModal');
                             showToast("Signed in! Welcome back.", 'success');
                         } catch (signInErr) {
                             showToast("Wrong password or invalid credentials", 'error');
@@ -1362,7 +1403,7 @@
             }
         };
 
-        window.finalizeChannel = async () => { 
+        window.finalizeChannel = async function() { 
             const user = auth.currentUser; 
             if(!user) { showToast("No user logged in", 'error'); return; }
             const name = document.getElementById('newChanName').value.trim(); 
@@ -1380,7 +1421,7 @@
                     dp: dpUrl, email: user.email, subs: 0, watchHours: 0, following: [], 
                     createdAt: new Date().toISOString(), banned: false 
                 }); 
-                closeModal('createChannelModal'); 
+                window.closeModal('createChannelModal'); 
                 showToast("Channel created! 🎉", 'success');
                 const docSnap = await getDoc(doc(creatorsCol, user.uid));
                 if(docSnap.exists()) {
@@ -1391,7 +1432,7 @@
             finally { btn.disabled = false; btn.innerHTML = 'Create Channel'; }
         };
 
-        window.publishVideo = async () => { 
+        window.publishVideo = async function() { 
             const user = auth.currentUser; 
             if(!user || !window.currentUserData) { showToast("Sign in to upload", 'error'); return; }
             if (window.currentUserData.banned) { showToast('Your account is banned.', 'error'); return; }
@@ -1408,7 +1449,6 @@
                 if(document.getElementById('thumbInput').files[0]) thumbUrl = await window.uploadToCloudinary(document.getElementById('thumbInput').files[0]); 
                 const videoUrl = await window.uploadToCloudinary(videoFile, (p) => { progressBar.style.width = `${p}%`; percentSpan.innerText = `${p}%`; }); 
                 if (videoUrl) { 
-                    // Get video duration with timeout
                     const tempVideo = document.createElement('video');
                     tempVideo.src = URL.createObjectURL(videoFile);
                     const duration = await new Promise((resolve) => {
@@ -1433,7 +1473,7 @@
                         duration: duration || 60,
                         createdAt: new Date().toISOString() 
                     }); 
-                    closeModal('uploadVideoModal'); 
+                    window.closeModal('uploadVideoModal'); 
                     document.getElementById('upTitle').value = ''; 
                     document.getElementById('thumbInput').value = ''; 
                     document.getElementById('videoInput').value = ''; 
@@ -1444,52 +1484,60 @@
             finally { btn.disabled = false; progressBox.classList.add('hidden'); } 
         };
 
-        window.handleLike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.likes?.includes(myId)) await updateDoc(vidDoc, { likes: arrayRemove(myId) }); else await updateDoc(vidDoc, { likes: arrayUnion(myId), dislikes: arrayRemove(myId) }); };
-        window.handleDislike = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const vidDoc = doc(videosCol, window.currentVideoId); const vid = window.videos.find(v => v.id === window.currentVideoId); const myId = window.currentUserData.id; if(vid.dislikes?.includes(myId)) await updateDoc(vidDoc, { dislikes: arrayRemove(myId) }); else await updateDoc(vidDoc, { dislikes: arrayUnion(myId), likes: arrayRemove(myId) }); };
-        window.postComment = async () => { if(!window.currentUserData) { openAuthModal(); return; } if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } const text = document.getElementById('commentInput').value.trim(); if(!text) return; await updateDoc(doc(videosCol, window.currentVideoId), { comments: arrayUnion({ userId: window.currentUserData.id, userName: window.currentUserData.name, userDP: window.currentUserData.dp, text, createdAt: new Date().toISOString() }) }); document.getElementById('commentInput').value = ""; };
-
-        // --- INCREMENT VIEWS WITH PROTECTION ---
-        window.incrementViews = async (vidId) => {
-            // Check if user is watching their own video
-            if (window.currentUserData) {
-                const vid = window.videos.find(v => v.id === vidId);
-                if (vid && vid.creatorId === window.currentUserData.id) {
-                    showToast('You cannot earn from your own videos', 'warning');
-                    return false;
-                }
-            }
-            
-            // Check if view can be counted
-            if (!canCountView(vidId)) {
-                showToast('You already watched this video', 'warning');
-                return false;
-            }
-            
-            try {
-                await updateDoc(doc(videosCol, vidId), { views: increment(1) });
-                markVideoViewed(vidId);
-                
-                // Log the view
-                try {
-                    await addDoc(viewLogsCol, {
-                        videoId: vidId,
-                        userId: window.currentUserData?.id || 'anonymous',
-                        ip: getClientIP(),
-                        timestamp: new Date().toISOString()
-                    });
-                } catch(e) {}
-                
-                return true;
-            } catch(e) {
-                console.error('Error incrementing views:', e);
-                return false;
-            }
+        window.handleLike = async function() { 
+            if(!window.currentUserData) { window.openAuthModal(); return; } 
+            if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } 
+            const vidDoc = doc(videosCol, window.currentVideoId); 
+            const vid = window.videos.find(v => v.id === window.currentVideoId); 
+            const myId = window.currentUserData.id; 
+            if(vid.likes?.includes(myId)) await updateDoc(vidDoc, { likes: arrayRemove(myId) }); 
+            else await updateDoc(vidDoc, { likes: arrayUnion(myId), dislikes: arrayRemove(myId) }); 
+        };
+        
+        window.handleDislike = async function() { 
+            if(!window.currentUserData) { window.openAuthModal(); return; } 
+            if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } 
+            const vidDoc = doc(videosCol, window.currentVideoId); 
+            const vid = window.videos.find(v => v.id === window.currentVideoId); 
+            const myId = window.currentUserData.id; 
+            if(vid.dislikes?.includes(myId)) await updateDoc(vidDoc, { dislikes: arrayRemove(myId) }); 
+            else await updateDoc(vidDoc, { dislikes: arrayUnion(myId), likes: arrayRemove(myId) }); 
+        };
+        
+        window.postComment = async function() { 
+            if(!window.currentUserData) { window.openAuthModal(); return; } 
+            if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; } 
+            const text = document.getElementById('commentInput').value.trim(); 
+            if(!text) return; 
+            await updateDoc(doc(videosCol, window.currentVideoId), { 
+                comments: arrayUnion({ 
+                    userId: window.currentUserData.id, 
+                    userName: window.currentUserData.name, 
+                    userDP: window.currentUserData.dp, 
+                    text, 
+                    createdAt: new Date().toISOString() 
+                }) 
+            }); 
+            document.getElementById('commentInput').value = ""; 
         };
 
-        function updateSubscribeButtonUI(targetId) { if(!window.currentUserData) return; const isSubscribed = window.currentUserData.following?.includes(targetId); const subBtn = document.getElementById('subBtn'); if(subBtn && !subBtn.classList.contains('hidden')) { subBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; subBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; } const playingSubBtn = document.getElementById('playingSubBtn'); if(playingSubBtn && !playingSubBtn.classList.contains('hidden')) { playingSubBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; playingSubBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-4 py-1.5 rounded-xl font-black text-xs`; } }
+        function updateSubscribeButtonUI(targetId) { 
+            if(!window.currentUserData) return; 
+            const isSubscribed = window.currentUserData.following?.includes(targetId); 
+            const subBtn = document.getElementById('subBtn'); 
+            if(subBtn && !subBtn.classList.contains('hidden')) { 
+                subBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; 
+                subBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; 
+            } 
+            const playingSubBtn = document.getElementById('playingSubBtn'); 
+            if(playingSubBtn && !playingSubBtn.classList.contains('hidden')) { 
+                playingSubBtn.innerText = isSubscribed ? "Subscribed ✓" : "Subscribe"; 
+                playingSubBtn.className = `instant-transition ${isSubscribed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-4 py-1.5 rounded-xl font-black text-xs`; 
+            } 
+        }
         
-        window.handleSubscription = async () => { 
-            if(!window.currentUserData) { openAuthModal(); return; } 
+        window.handleSubscription = async function() { 
+            if(!window.currentUserData) { window.openAuthModal(); return; } 
             if (window.currentUserData.banned) { showToast('Banned account.', 'error'); return; }
             const targetId = document.getElementById('chanDP').getAttribute('data-id'); 
             if(!targetId || targetId === window.currentUserData.id) return; 
@@ -1513,14 +1561,54 @@
             } 
         };
         
-        window.handleSubscriptionFromPlayer = async () => { const activeVid = window.videos.find(v => v.id === window.currentVideoId); if(activeVid) { document.getElementById('chanDP').setAttribute('data-id', activeVid.creatorId); await window.handleSubscription(); } };
-        window.openCreatorFromPlayer = () => { const activeVid = window.videos.find(v => v.id === window.currentVideoId); if(activeVid) openChannel(activeVid.creatorId); };
+        window.handleSubscriptionFromPlayer = async function() { 
+            const activeVid = window.videos.find(v => v.id === window.currentVideoId); 
+            if(activeVid) { 
+                document.getElementById('chanDP').setAttribute('data-id', activeVid.creatorId); 
+                await window.handleSubscription(); 
+            } 
+        };
+        
+        window.openCreatorFromPlayer = function() { 
+            const activeVid = window.videos.find(v => v.id === window.currentVideoId); 
+            if(activeVid) window.openChannel(activeVid.creatorId); 
+        };
 
-        function updateSubscribersUI() { if(!window.currentUserData) return; const myFollows = window.currentUserData.following || []; const followed = window.creators.filter(c => myFollows.includes(c.id)); document.getElementById('sidebarSubsDesktop').innerHTML = followed.map(c => `<div class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-xl cursor-pointer" onclick="openChannel('${c.id}')"><img src="${c.dp}" class="w-8 h-8 rounded-full"><span class="text-sm font-bold truncate">${c.name}</span></div>`).join('') || '<p class="px-4 text-xs text-slate-400">No subscriptions</p>'; const mobileSubs = document.getElementById('mobileSubsList'); const mobileNo = document.getElementById('mobileNoSubs'); if(mobileSubs) { if(followed.length === 0) { mobileSubs.innerHTML = ''; mobileNo.classList.remove('hidden'); } else { mobileNo.classList.add('hidden'); mobileSubs.innerHTML = followed.map(c => `<div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl cursor-pointer" onclick="openChannel('${c.id}'); showView('channelView');"><img src="${c.dp}" class="w-12 h-12 rounded-full"><div><h4 class="font-black">${c.name}</h4><p class="text-xs">${c.subs || 0} subscribers</p></div></div>`).join(''); } } const studioSubs = document.getElementById('studioSubsList'); if(studioSubs) studioSubs.innerHTML = followed.map(c => `<div class="p-3 border rounded-xl flex gap-3 cursor-pointer" onclick="openChannel('${c.id}')"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-black text-sm">${c.name}</h4><p class="text-xs">${c.subs||0} subs</p></div></div>`).join('') || '<p class="col-span-full text-center py-4">No follows</p>'; }
+        function updateSubscribersUI() { 
+            if(!window.currentUserData) return; 
+            const myFollows = window.currentUserData.following || []; 
+            const followed = window.creators.filter(c => myFollows.includes(c.id)); 
+            document.getElementById('sidebarSubsDesktop').innerHTML = followed.map(c => `<div class="flex items-center gap-3 px-4 py-2 hover:bg-slate-50 rounded-xl cursor-pointer" onclick="window.openChannel('${c.id}')"><img src="${c.dp}" class="w-8 h-8 rounded-full"><span class="text-sm font-bold truncate">${c.name}</span></div>`).join('') || '<p class="px-4 text-xs text-slate-400">No subscriptions</p>'; 
+            const mobileSubs = document.getElementById('mobileSubsList'); 
+            const mobileNo = document.getElementById('mobileNoSubs'); 
+            if(mobileSubs) { 
+                if(followed.length === 0) { 
+                    mobileSubs.innerHTML = ''; 
+                    mobileNo.classList.remove('hidden'); 
+                } else { 
+                    mobileNo.classList.add('hidden'); 
+                    mobileSubs.innerHTML = followed.map(c => `<div class="flex items-center gap-4 p-3 bg-slate-50 rounded-2xl cursor-pointer" onclick="window.openChannel('${c.id}'); window.showView('channelView');"><img src="${c.dp}" class="w-12 h-12 rounded-full"><div><h4 class="font-black">${c.name}</h4><p class="text-xs">${c.subs || 0} subscribers</p></div></div>`).join(''); 
+                } 
+            } 
+            const studioSubs = document.getElementById('studioSubsList'); 
+            if(studioSubs) studioSubs.innerHTML = followed.map(c => `<div class="p-3 border rounded-xl flex gap-3 cursor-pointer" onclick="window.openChannel('${c.id}')"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-black text-sm">${c.name}</h4><p class="text-xs">${c.subs||0} subs</p></div></div>`).join('') || '<p class="col-span-full text-center py-4">No follows</p>'; 
+        }
 
-        window.handleDPUpdate = async (input) => { if (input.files[0] && window.currentUserData) { const url = await window.uploadToCloudinary(input.files[0]); if (url) await updateDoc(doc(creatorsCol, window.currentUserData.id), { dp: url }); showToast("Profile picture updated!", 'success'); } };
-        window.deleteVideo = async (vidId) => { if(confirm("Delete video?")) await deleteDoc(doc(videosCol, vidId)); };
-        window.handleLogout = () => signOut(auth);
+        window.handleDPUpdate = async function(input) { 
+            if (input.files[0] && window.currentUserData) { 
+                const url = await window.uploadToCloudinary(input.files[0]); 
+                if (url) await updateDoc(doc(creatorsCol, window.currentUserData.id), { dp: url }); 
+                showToast("Profile picture updated!", 'success'); 
+            } 
+        };
+        
+        window.deleteVideo = async function(vidId) { 
+            if(confirm("Delete video?")) await deleteDoc(doc(videosCol, vidId)); 
+        };
+        
+        window.handleLogout = function() { 
+            signOut(auth); 
+        };
 
         function loginSuccess() { 
             document.getElementById('authBtn').style.display = 'none'; 
@@ -1530,7 +1618,12 @@
             updateUI(); 
             updateStudioEarningsDisplay();
         }
-        function updateUI() { if(window.currentUserData) document.getElementById('userNavDP').src = window.currentUserData.dp; updateSubscribersUI(); }
+        
+        function updateUI() { 
+            if(window.currentUserData) document.getElementById('userNavDP').src = window.currentUserData.dp; 
+            updateSubscribersUI(); 
+        }
+        
         function updateStudio() { 
             if(!window.currentUserData) return; 
             const myVids = window.videos.filter(v => v.creatorId === window.currentUserData.id); 
@@ -1570,7 +1663,7 @@
             const activeBanners = window.bannerAds.filter(ad => ad.imageUrl && ad.destinationUrl);
             const videoItems = window.videos.slice().reverse().map(v => { 
                 const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown',dp:''}; 
-                return `<div class="video-card cursor-pointer group relative" onclick="watchVideo('${v.id}')">
+                return `<div class="video-card cursor-pointer group relative" onclick="window.watchVideo('${v.id}')">
                     <div class="aspect-video rounded-xl overflow-hidden bg-slate-100 relative">
                         <img src="${v.thumb}" class="w-full h-full object-cover transition duration-300 group-hover:scale-105">
                         <span class="video-duration-badge">${formatDuration(v.duration)}</span>
@@ -1578,7 +1671,7 @@
                             <i class="fa-regular fa-eye"></i> ${v.views || 0}
                         </div>
                     </div>
-                    <div class="flex gap-3 mt-3"><img src="${c.dp}" class="w-9 h-9 rounded-full object-cover cursor-pointer" onclick="event.stopPropagation(); openChannel('${v.creatorId}')"><div><h3 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h3><p class="text-slate-500 text-xs font-bold cursor-pointer" onclick="event.stopPropagation(); openChannel('${v.creatorId}')">${c.name}</p></div></div>
+                    <div class="flex gap-3 mt-3"><img src="${c.dp}" class="w-9 h-9 rounded-full object-cover cursor-pointer" onclick="event.stopPropagation(); window.openChannel('${v.creatorId}')"><div><h3 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h3><p class="text-slate-500 text-xs font-bold cursor-pointer" onclick="event.stopPropagation(); window.openChannel('${v.creatorId}')">${c.name}</p></div></div>
                 </div>`;
             });
             let finalHtml = '';
@@ -1670,7 +1763,7 @@
                 if (item.type === 'video') {
                     const v = item.data;
                     const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'...'};
-                    return `<div class="flex gap-3 cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="w-28 aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h4><p class="text-slate-500 text-xs">${c.name}</p><p class="text-slate-400 text-[10px]"><i class="fa-regular fa-eye mr-1"></i>${v.views||0}</p></div></div>`;
+                    return `<div class="flex gap-3 cursor-pointer group" onclick="window.watchVideo('${v.id}')"><div class="w-28 aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold text-sm line-clamp-2 group-hover:text-blue-600">${v.title}</h4><p class="text-slate-500 text-xs">${c.name}</p><p class="text-slate-400 text-[10px]"><i class="fa-regular fa-eye mr-1"></i>${v.views||0}</p></div></div>`;
                 } else {
                     const ad = item.data;
                     return `<div class="video-ad-overlay" onclick="window.open('${ad.destinationUrl}','_blank')">
@@ -1687,7 +1780,7 @@
         }
 
         // --- WATCH VIDEO WITH AD AND PROTECTION ---
-        window.watchVideo = async (id) => { 
+        window.watchVideo = async function(id) { 
             if (window.currentUserData?.banned) { showToast('Your account is banned.', 'error'); return; }
             window.currentVideoId = id; 
             const vid = window.videos.find(v=>v.id===id); 
@@ -1699,30 +1792,24 @@
             const videoEl = document.getElementById('mainVideo');
             const loader = document.getElementById('videoLoaderOverlay');
             
-            // Show loader
             loader.classList.remove('hidden');
             retryCount = 0;
             
-            // Set video source
             videoEl.src = vid.videoUrl;
             videoEl.load();
             
-            showView('playerView');
+            window.showView('playerView');
             renderVideoDetails(id);
             renderRecommendations(id);
             
-            // Update share link with clean URL
             const linkInput = document.getElementById('videoLinkInput');
             linkInput.value = generateVideoLink(id);
             
-            // Show share button
             document.getElementById('shareLinkBtn').innerHTML = `<i class="fa-solid fa-link"></i> Share`;
             
-            // Setup watch time tracking
             watchStartTime = Date.now();
             isWatchTracking = false;
             
-            // Handle video loading
             videoEl.oncanplay = () => {
                 loader.classList.add('hidden');
                 const ad = getRandomVideoAd();
@@ -1756,21 +1843,19 @@
                 }
             };
             
-            // Track watch time with protection
             videoEl.ontimeupdate = () => {
                 if (videoEl.currentTime > 30 && !isWatchTracking) {
                     isWatchTracking = true;
                 }
                 if (isWatchTracking) {
                     const elapsed = (Date.now() - watchStartTime) / 1000;
-                    if (elapsed > 10) { // Track every 10 seconds
+                    if (elapsed > 10) {
                         trackWatchTime(id, elapsed);
                         watchStartTime = Date.now();
                     }
                 }
             };
             
-            // Track total watch time on pause/end
             const trackTotalWatchTime = () => {
                 if (isWatchTracking) {
                     const totalElapsed = (Date.now() - watchStartTime) / 1000;
@@ -1809,17 +1894,15 @@
                     <p class="text-sm">${c.text}</p>
                 </div>
                 ${window.currentUserData && (c.userId === window.currentUserData.id || vid.creatorId === window.currentUserData.id) ? 
-                    `<button onclick="deleteComment('${id}', ${idx})" class="text-slate-300 hover:text-red-500 text-xs"><i class="fa-regular fa-trash-can"></i></button>` : ''
+                    `<button onclick="window.deleteComment('${id}', ${idx})" class="text-slate-300 hover:text-red-500 text-xs"><i class="fa-regular fa-trash-can"></i></button>` : ''
                 }
             </div>`).join('') || '<p class="text-center py-4 text-slate-400">No comments yet</p>'; 
             
-            // Update share link with clean URL
             const linkInput = document.getElementById('videoLinkInput');
             linkInput.value = generateVideoLink(id);
         }
 
-        // Delete comment function
-        window.deleteComment = async (videoId, commentIndex) => {
+        window.deleteComment = async function(videoId, commentIndex) {
             if (!confirm('Delete this comment?')) return;
             const vid = window.videos.find(v => v.id === videoId);
             if (!vid) return;
@@ -1830,7 +1913,7 @@
         };
 
         // --- SEARCH ---
-        window.performDesktopSearch = () => {
+        window.performDesktopSearch = function() {
             const query = document.getElementById('desktopSearchInput').value.toLowerCase();
             const resultsDiv = document.getElementById('desktopSearchResults');
             const clearIcon = document.getElementById('desktopClearSearch');
@@ -1840,43 +1923,240 @@
             const filteredChannels = window.creators.filter(c => c.name.toLowerCase().includes(query) || (c.handle && c.handle.toLowerCase().includes(query)));
             if(filteredVideos.length === 0 && filteredChannels.length === 0) { resultsDiv.innerHTML = '<div class="p-4 text-center text-slate-400">No results</div>'; resultsDiv.classList.remove('hidden'); return; }
             let html = '';
-            if(filteredVideos.length) { html += '<div class="p-2 border-b"><h4 class="font-bold text-sm px-2 py-1">Videos</h4>'; filteredVideos.slice(0,5).forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg" onclick="watchVideo('${v.id}'); document.getElementById('desktopSearchResults').classList.add('hidden'); document.getElementById('desktopSearchInput').value=''"><img src="${v.thumb}" class="w-12 h-10 rounded object-cover"><div><div class="font-bold text-sm">${v.title}</div><div class="text-xs text-slate-500">${c.name}</div></div></div>`; }); html += '</div>'; }
-            if(filteredChannels.length) { html += '<div class="p-2"><h4 class="font-bold text-sm px-2 py-1">Channels</h4>'; filteredChannels.slice(0,5).forEach(c => { html += `<div class="flex gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg" onclick="openChannel('${c.id}'); document.getElementById('desktopSearchResults').classList.add('hidden'); document.getElementById('desktopSearchInput').value=''"><img src="${c.dp}" class="w-8 h-8 rounded-full"><div><div class="font-bold text-sm">${c.name}</div><div class="text-xs text-slate-500">${c.handle || '@channel'}</div></div></div>`; }); html += '</div>'; }
+            if(filteredVideos.length) { html += '<div class="p-2 border-b"><h4 class="font-bold text-sm px-2 py-1">Videos</h4>'; filteredVideos.slice(0,5).forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg" onclick="window.watchVideo('${v.id}'); document.getElementById('desktopSearchResults').classList.add('hidden'); document.getElementById('desktopSearchInput').value=''"><img src="${v.thumb}" class="w-12 h-10 rounded object-cover"><div><div class="font-bold text-sm">${v.title}</div><div class="text-xs text-slate-500">${c.name}</div></div></div>`; }); html += '</div>'; }
+            if(filteredChannels.length) { html += '<div class="p-2"><h4 class="font-bold text-sm px-2 py-1">Channels</h4>'; filteredChannels.slice(0,5).forEach(c => { html += `<div class="flex gap-3 p-2 hover:bg-slate-50 cursor-pointer rounded-lg" onclick="window.openChannel('${c.id}'); document.getElementById('desktopSearchResults').classList.add('hidden'); document.getElementById('desktopSearchInput').value=''"><img src="${c.dp}" class="w-8 h-8 rounded-full"><div><div class="font-bold text-sm">${c.name}</div><div class="text-xs text-slate-500">${c.handle || '@channel'}</div></div></div>`; }); html += '</div>'; }
             resultsDiv.innerHTML = html;
             resultsDiv.classList.remove('hidden');
         };
-        window.clearDesktopSearch = () => { document.getElementById('desktopSearchInput').value = ''; document.getElementById('desktopSearchResults').classList.add('hidden'); document.getElementById('desktopClearSearch').style.display = 'none'; };
-        document.addEventListener('click', function(e) { if(!e.target.closest('.desktop-search-bar') && !e.target.closest('#desktopSearchResults')) { document.getElementById('desktopSearchResults')?.classList.add('hidden'); } });
         
-        function openFullScreenSearch() { document.getElementById('fullScreenSearch').classList.add('open'); document.getElementById('fullSearchInput').focus(); performFullSearch(); }
-        function closeFullScreenSearch() { document.getElementById('fullScreenSearch').classList.remove('open'); }
-        function performFullSearch() { const query = document.getElementById('fullSearchInput').value.toLowerCase(); const resultsDiv = document.getElementById('fullSearchResults'); if(!query.trim()) { resultsDiv.innerHTML = '<div class="text-center text-slate-400 py-10">Search for videos or channels</div>'; return; } const filteredVideos = window.videos.filter(v => v.title.toLowerCase().includes(query)); const filteredChannels = window.creators.filter(c => c.name.toLowerCase().includes(query) || (c.handle && c.handle.toLowerCase().includes(query))); let html = ''; if(filteredVideos.length) { html += '<h3 class="font-black text-lg mb-3">Videos</h3>'; filteredVideos.forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 mb-4 cursor-pointer" onclick="watchVideo('${v.id}'); closeFullScreenSearch();"><div class="w-24 h-14 bg-slate-200 rounded-lg overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold">${v.title}</h4><p class="text-xs text-slate-500">${c.name}</p></div></div>`; }); } if(filteredChannels.length) { html += '<h3 class="font-black text-lg mb-3 mt-4">Channels</h3>'; filteredChannels.forEach(c => { html += `<div class="flex items-center gap-3 mb-4 cursor-pointer" onclick="openChannel('${c.id}'); closeFullScreenSearch();"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-bold">${c.name}</h4><p class="text-xs text-slate-500">${c.handle || '@channel'}</p></div></div>`; }); } if(!filteredVideos.length && !filteredChannels.length) html = '<div class="text-center text-slate-400 py-10">No results found</div>'; resultsDiv.innerHTML = html; }
-        function clearFullSearch() { document.getElementById('fullSearchInput').value = ''; performFullSearch(); }
-        function showSubscriptionsView() { showView('subscriptionsView'); }
-        function goBackFromChannel() { showView('homeView'); }
-        function showView(viewId) { ['homeView','channelView','studioView','playerView','subscriptionsView'].forEach(id=>{ const el=document.getElementById(id); if(el) el.classList.add('hidden'); }); document.getElementById(viewId).classList.remove('hidden'); if(viewId!=='playerView' && document.getElementById('mainVideo')) { document.getElementById('mainVideo').pause(); } window.scrollTo(0,0); const ids = { homeView:'navHome', subscriptionsView:'navSubs', studioView:'navStudio', channelView:'navProfile' }; Object.keys(ids).forEach(v=>{ const el=document.getElementById(ids[v]); if(el) el.classList.remove('active'); }); if(ids[viewId]) document.getElementById(ids[viewId])?.classList.add('active'); }
-        function openChannel(id) { const creator = window.creators.find(c=>c.id===id); if(!creator) return; document.getElementById('chanName').innerText = creator.name; document.getElementById('chanHandle').innerText = `${creator.handle} • ${creator.subs||0} subscribers`; document.getElementById('chanDP').src = creator.dp; document.getElementById('chanDP').setAttribute('data-id',id); const isMe = window.currentUserData?.id === id; const isSubbed = window.currentUserData?.following?.includes(id); document.getElementById('uploadBtn').classList.toggle('hidden',!isMe); const subBtn = document.getElementById('subBtn'); subBtn.classList.toggle('hidden',isMe); if(!isMe) { subBtn.innerText = isSubbed ? "Subscribed ✓" : "Subscribe"; subBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; } const editOverlay = document.getElementById('dpEditOverlay'); if(editOverlay) { editOverlay.classList.toggle('flex',isMe); editOverlay.classList.toggle('hidden',!isMe); } const chanVideos = window.videos.filter(v=>v.creatorId===id); document.getElementById('channelVideoGrid').innerHTML = chanVideos.map(v=>`<div class="cursor-pointer group" onclick="watchVideo('${v.id}')"><div class="aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge">${formatDuration(v.duration)}</span></div><div class="flex justify-between items-start mt-2"><h3 class="font-bold text-sm line-clamp-1">${v.title}</h3>${isMe ? `<button onclick="event.stopPropagation(); deleteVideo('${v.id}')" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div>`).join(''); showView('channelView'); }
-        function triggerDPUpdate() { if(window.currentUserData && document.getElementById('chanDP').getAttribute('data-id')===window.currentUserData.id) document.getElementById('dpUpdateInput').click(); }
-        function openAuthModal() { document.getElementById('authModal').classList.remove('hidden'); }
-        function openUploadModal() { if(window.currentUserData) { if (window.currentUserData.banned) { showToast('Your account is banned.', 'error'); return; } document.getElementById('uploadVideoModal').classList.remove('hidden'); } else openAuthModal(); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-        function openMyChannel() { if(window.currentUserData) openChannel(window.currentUserData.id); }
-        function previewImage(input, targetId) { if(input.files?.[0]){ const reader=new FileReader(); reader.onload=e=>document.getElementById(targetId).src=e.target.result; reader.readAsDataURL(input.files[0]); } }
-        function handleFileSelect(input, labelId, previewId) { if(input.files?.[0]){ document.getElementById(labelId).innerText = input.files[0].name; if(previewId){ const reader=new FileReader(); reader.onload=e=>{ const img=document.getElementById(previewId); img.src=e.target.result; img.classList.remove('hidden'); }; reader.readAsDataURL(input.files[0]); } } }
+        window.clearDesktopSearch = function() { 
+            document.getElementById('desktopSearchInput').value = ''; 
+            document.getElementById('desktopSearchResults').classList.add('hidden'); 
+            document.getElementById('desktopClearSearch').style.display = 'none'; 
+        };
+        
+        document.addEventListener('click', function(e) { 
+            if(!e.target.closest('.desktop-search-bar') && !e.target.closest('#desktopSearchResults')) { 
+                document.getElementById('desktopSearchResults')?.classList.add('hidden'); 
+            } 
+        });
+        
+        window.openFullScreenSearch = function() { 
+            document.getElementById('fullScreenSearch').classList.add('open'); 
+            document.getElementById('fullSearchInput').focus(); 
+            window.performFullSearch(); 
+        };
+        
+        window.closeFullScreenSearch = function() { 
+            document.getElementById('fullScreenSearch').classList.remove('open'); 
+        };
+        
+        window.performFullSearch = function() { 
+            const query = document.getElementById('fullSearchInput').value.toLowerCase(); 
+            const resultsDiv = document.getElementById('fullSearchResults'); 
+            if(!query.trim()) { resultsDiv.innerHTML = '<div class="text-center text-slate-400 py-10">Search for videos or channels</div>'; return; } 
+            const filteredVideos = window.videos.filter(v => v.title.toLowerCase().includes(query)); 
+            const filteredChannels = window.creators.filter(c => c.name.toLowerCase().includes(query) || (c.handle && c.handle.toLowerCase().includes(query))); 
+            let html = ''; 
+            if(filteredVideos.length) { html += '<h3 class="font-black text-lg mb-3">Videos</h3>'; filteredVideos.forEach(v => { const c = window.creators.find(cr=>cr.id===v.creatorId)||{name:'Unknown'}; html += `<div class="flex gap-3 mb-4 cursor-pointer" onclick="window.watchVideo('${v.id}'); window.closeFullScreenSearch();"><div class="w-24 h-14 bg-slate-200 rounded-lg overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge text-[8px] px-1.5 py-0.5">${formatDuration(v.duration)}</span></div><div><h4 class="font-bold">${v.title}</h4><p class="text-xs text-slate-500">${c.name}</p></div></div>`; }); } 
+            if(filteredChannels.length) { html += '<h3 class="font-black text-lg mb-3 mt-4">Channels</h3>'; filteredChannels.forEach(c => { html += `<div class="flex items-center gap-3 mb-4 cursor-pointer" onclick="window.openChannel('${c.id}'); window.closeFullScreenSearch();"><img src="${c.dp}" class="w-10 h-10 rounded-full"><div><h4 class="font-bold">${c.name}</h4><p class="text-xs text-slate-500">${c.handle || '@channel'}</p></div></div>`; }); } 
+            if(!filteredVideos.length && !filteredChannels.length) html = '<div class="text-center text-slate-400 py-10">No results found</div>'; resultsDiv.innerHTML = html; 
+        };
+        
+        window.clearFullSearch = function() { 
+            document.getElementById('fullSearchInput').value = ''; 
+            window.performFullSearch(); 
+        };
+        
+        window.showSubscriptionsView = function() { 
+            window.showView('subscriptionsView'); 
+        };
+        
+        window.goBackFromChannel = function() { 
+            window.showView('homeView'); 
+        };
+        
+        window.showView = function(viewId) { 
+            ['homeView','channelView','studioView','playerView','subscriptionsView'].forEach(id=>{ 
+                const el=document.getElementById(id); 
+                if(el) el.classList.add('hidden'); 
+            }); 
+            document.getElementById(viewId).classList.remove('hidden'); 
+            if(viewId!=='playerView' && document.getElementById('mainVideo')) { 
+                document.getElementById('mainVideo').pause(); 
+            } 
+            window.scrollTo(0,0); 
+            const ids = { homeView:'navHome', subscriptionsView:'navSubs', studioView:'navStudio', channelView:'navProfile' }; 
+            Object.keys(ids).forEach(v=>{ 
+                const el=document.getElementById(ids[v]); 
+                if(el) el.classList.remove('active'); 
+            }); 
+            if(ids[viewId]) document.getElementById(ids[viewId])?.classList.add('active'); 
+        };
+        
+        window.openChannel = function(id) { 
+            const creator = window.creators.find(c=>c.id===id); 
+            if(!creator) return; 
+            document.getElementById('chanName').innerText = creator.name; 
+            document.getElementById('chanHandle').innerText = `${creator.handle} • ${creator.subs||0} subscribers`; 
+            document.getElementById('chanDP').src = creator.dp; 
+            document.getElementById('chanDP').setAttribute('data-id',id); 
+            const isMe = window.currentUserData?.id === id; 
+            const isSubbed = window.currentUserData?.following?.includes(id); 
+            document.getElementById('uploadBtn').classList.toggle('hidden',!isMe); 
+            const subBtn = document.getElementById('subBtn'); 
+            subBtn.classList.toggle('hidden',isMe); 
+            if(!isMe) { 
+                subBtn.innerText = isSubbed ? "Subscribed ✓" : "Subscribe"; 
+                subBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-8 py-3 rounded-2xl font-black text-sm`; 
+            } 
+            const editOverlay = document.getElementById('dpEditOverlay'); 
+            if(editOverlay) { 
+                editOverlay.classList.toggle('flex',isMe); 
+                editOverlay.classList.toggle('hidden',!isMe); 
+            } 
+            const chanVideos = window.videos.filter(v=>v.creatorId===id); 
+            document.getElementById('channelVideoGrid').innerHTML = chanVideos.map(v=>`<div class="cursor-pointer group" onclick="window.watchVideo('${v.id}')"><div class="aspect-video rounded-xl overflow-hidden relative"><img src="${v.thumb}" class="w-full h-full object-cover"><span class="video-duration-badge">${formatDuration(v.duration)}</span></div><div class="flex justify-between items-start mt-2"><h3 class="font-bold text-sm line-clamp-1">${v.title}</h3>${isMe ? `<button onclick="event.stopPropagation(); window.deleteVideo('${v.id}')" class="text-slate-300 hover:text-red-500"><i class="fa-solid fa-trash-can"></i></button>` : ''}</div></div>`).join(''); 
+            window.showView('channelView'); 
+        };
+        
+        window.triggerDPUpdate = function() { 
+            if(window.currentUserData && document.getElementById('chanDP').getAttribute('data-id')===window.currentUserData.id) 
+                document.getElementById('dpUpdateInput').click(); 
+        };
+        
+        window.openAuthModal = function() { 
+            document.getElementById('authModal').classList.remove('hidden'); 
+        };
+        
+        window.openUploadModal = function() { 
+            if(window.currentUserData) { 
+                if (window.currentUserData.banned) { showToast('Your account is banned.', 'error'); return; } 
+                document.getElementById('uploadVideoModal').classList.remove('hidden'); 
+            } else window.openAuthModal(); 
+        };
+        
+        window.closeModal = function(id) { 
+            document.getElementById(id).classList.add('hidden'); 
+        };
+        
+        window.openMyChannel = function() { 
+            if(window.currentUserData) window.openChannel(window.currentUserData.id); 
+        };
+        
+        window.previewImage = function(input, targetId) { 
+            if(input.files?.[0]){ 
+                const reader=new FileReader(); 
+                reader.onload=e=>document.getElementById(targetId).src=e.target.result; 
+                reader.readAsDataURL(input.files[0]); 
+            } 
+        };
+        
+        window.handleFileSelect = function(input, labelId, previewId) { 
+            if(input.files?.[0]){ 
+                document.getElementById(labelId).innerText = input.files[0].name; 
+                if(previewId){ 
+                    const reader=new FileReader(); 
+                    reader.onload=e=>{ 
+                        const img=document.getElementById(previewId); 
+                        img.src=e.target.result; 
+                        img.classList.remove('hidden'); 
+                    }; 
+                    reader.readAsDataURL(input.files[0]); 
+                } 
+            } 
+        };
+        
         function handleLogoutUI() { 
             document.getElementById('authBtn').style.display = 'block'; 
             document.getElementById('userProfile').classList.add('hidden'); 
             document.getElementById('desktopLogoutBtn')?.classList.add('hidden');
             window.currentUserData = null; 
-            showView('homeView'); 
+            window.showView('homeView'); 
             document.getElementById('banOverlay').classList.remove('active');
             document.getElementById('desktopSidebarAd').classList.add('hidden');
         }
         
-        async function updateMonetizationButton() { if(!window.currentUserData) return; const subs = window.currentUserData.subs || 0; const hours = window.currentUserData.watchHours || 0; const meetsCriteria = (subs >= 1000 && hours >= 4000); const q = query(monetizationCol, where("creatorId", "==", window.currentUserData.id)); const existingSnap = await getDocs(q); let existingReq = null; existingSnap.forEach(d => { existingReq = { id: d.id, ...d.data() }; }); const btn = document.getElementById('monetizationApplyBtn'); const msgDiv = document.getElementById('monetizationStatusMsg'); if(existingReq && existingReq.status === 'approved') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-green-600 font-bold">✅ Monetization Approved! You are earning.</span>'; return; } else if(existingReq && existingReq.status === 'pending') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-yellow-600">⏳ Request pending. Admin will review.</span>'; return; } else if(existingReq && existingReq.status === 'rejected') { if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply Now'; msgDiv.innerHTML = '<span class="text-red-500">Previously rejected. Apply again.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subs & 4000 hours</span>'; } return; } if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply for Monetization'; msgDiv.innerHTML = '<span class="text-green-600">You qualify! Click Apply to request.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); btn.innerText = 'Apply'; msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subscribers & 4000 watch hours</span>'; } }
-        async function sendMonetizationRequest(btn, msgDiv, subs, hours) { if(btn.disabled) return; btn.disabled = true; btn.innerText = 'Submitting...'; try { await addDoc(monetizationCol, { creatorId: window.currentUserData.id, subscribers: subs, watchHours: hours, status: 'pending', requestedAt: new Date().toISOString() }); msgDiv.innerHTML = '<span class="text-green-600">✅ Request sent to admin! You will be notified.</span>'; btn.innerText = 'Requested'; btn.classList.add('apply-btn-inactive'); } catch(e) { console.error(e); showToast("Error submitting request", 'error'); btn.disabled = false; btn.innerText = 'Apply for Monetization'; } }
+        async function updateMonetizationButton() { 
+            if(!window.currentUserData) return; 
+            const subs = window.currentUserData.subs || 0; 
+            const hours = window.currentUserData.watchHours || 0; 
+            const meetsCriteria = (subs >= 1000 && hours >= 4000); 
+            const q = query(monetizationCol, where("creatorId", "==", window.currentUserData.id)); 
+            const existingSnap = await getDocs(q); 
+            let existingReq = null; 
+            existingSnap.forEach(d => { existingReq = { id: d.id, ...d.data() }; }); 
+            const btn = document.getElementById('monetizationApplyBtn'); 
+            const msgDiv = document.getElementById('monetizationStatusMsg'); 
+            if(existingReq && existingReq.status === 'approved') { 
+                btn.disabled = true; 
+                btn.classList.add('apply-btn-inactive'); 
+                btn.classList.remove('apply-btn-active'); 
+                msgDiv.innerHTML = '<span class="text-green-600 font-bold">✅ Monetization Approved! You are earning.</span>'; 
+                return; 
+            } else if(existingReq && existingReq.status === 'pending') { 
+                btn.disabled = true; 
+                btn.classList.add('apply-btn-inactive'); 
+                btn.classList.remove('apply-btn-active'); 
+                msgDiv.innerHTML = '<span class="text-yellow-600">⏳ Request pending. Admin will review.</span>'; 
+                return; 
+            } else if(existingReq && existingReq.status === 'rejected') { 
+                if(meetsCriteria) { 
+                    btn.disabled = false; 
+                    btn.classList.add('apply-btn-active'); 
+                    btn.classList.remove('apply-btn-inactive'); 
+                    btn.innerText = 'Apply Now'; 
+                    msgDiv.innerHTML = '<span class="text-red-500">Previously rejected. Apply again.</span>'; 
+                    btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; 
+                } else { 
+                    btn.disabled = true; 
+                    btn.classList.add('apply-btn-inactive'); 
+                    btn.classList.remove('apply-btn-active'); 
+                    msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subs & 4000 hours</span>'; 
+                } 
+                return; 
+            } 
+            if(meetsCriteria) { 
+                btn.disabled = false; 
+                btn.classList.add('apply-btn-active'); 
+                btn.classList.remove('apply-btn-inactive'); 
+                btn.innerText = 'Apply for Monetization'; 
+                msgDiv.innerHTML = '<span class="text-green-600">You qualify! Click Apply to request.</span>'; 
+                btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; 
+            } else { 
+                btn.disabled = true; 
+                btn.classList.add('apply-btn-inactive'); 
+                btn.classList.remove('apply-btn-active'); 
+                btn.innerText = 'Apply'; 
+                msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subscribers & 4000 watch hours</span>'; 
+            } 
+        }
         
-        window.showView = showView; window.openChannel = openChannel; window.triggerDPUpdate = triggerDPUpdate; window.openAuthModal = openAuthModal; window.openUploadModal = openUploadModal; window.closeModal = closeModal; window.openMyChannel = openMyChannel; window.previewImage = previewImage; window.handleFileSelect = handleFileSelect; window.showSubscriptionsView = showSubscriptionsView; window.goBackFromChannel = goBackFromChannel; window.openFullScreenSearch = openFullScreenSearch; window.closeFullScreenSearch = closeFullScreenSearch; window.performFullSearch = performFullSearch; window.clearFullSearch = clearFullSearch; window.openWalletModal = openWalletModal; window.copyVideoLink = copyVideoLink; window.deleteComment = deleteComment;
+        async function sendMonetizationRequest(btn, msgDiv, subs, hours) { 
+            if(btn.disabled) return; 
+            btn.disabled = true; 
+            btn.innerText = 'Submitting...'; 
+            try { 
+                await addDoc(monetizationCol, { 
+                    creatorId: window.currentUserData.id, 
+                    subscribers: subs, 
+                    watchHours: hours, 
+                    status: 'pending', 
+                    requestedAt: new Date().toISOString() 
+                }); 
+                msgDiv.innerHTML = '<span class="text-green-600">✅ Request sent to admin! You will be notified.</span>'; 
+                btn.innerText = 'Requested'; 
+                btn.classList.add('apply-btn-inactive'); 
+            } catch(e) { 
+                console.error(e); 
+                showToast("Error submitting request", 'error'); 
+                btn.disabled = false; 
+                btn.innerText = 'Apply for Monetization'; 
+            } 
+        }
+        
+        // --- EVENT LISTENERS ---
+        document.getElementById('appealBanBtn').addEventListener('click', window.appealBan);
         
         // Prevent video download via right-click
         document.addEventListener('contextmenu', function(e) {
@@ -1886,25 +2166,30 @@
             }
         });
         
-        // Prevent drag of video
         document.addEventListener('dragstart', function(e) {
             if (e.target.tagName === 'VIDEO') {
                 e.preventDefault();
             }
         });
 
-        // Online/Offline detection
         window.addEventListener('online', () => {
             showToast('Back online!', 'success');
         });
+        
         window.addEventListener('offline', () => {
             showToast('You are offline. Please check your connection.', 'error');
         });
+        
+        // Expose functions to window
+        window.showToast = showToast;
+        window.generateVideoLink = generateVideoLink;
         
         setTimeout(() => {
             renderSidebarBanner();
             checkUrlForVideo();
         }, 500);
+        
+        console.log('✅ OpenView App Loaded Successfully!');
     </script>
 </body>
 </html>

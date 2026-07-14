@@ -418,9 +418,51 @@
             font-weight: 700;
         }
 
+        /* share link button */
+        .share-link-btn {
+            background: #f1f5f9;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #0f172a;
+            border: none;
+        }
+        .share-link-btn:hover {
+            background: #e2e8f0;
+        }
+        .share-link-btn i {
+            font-size: 14px;
+        }
+
+        /* video player link input */
+        .video-link-input {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 6px 16px;
+            font-size: 12px;
+            color: #64748b;
+            width: 100%;
+            max-width: 300px;
+            outline: none;
+            font-family: inherit;
+        }
+        .video-link-input:focus {
+            border-color: #3b82f6;
+        }
+
         @keyframes fadeIn { from { opacity: 0; transform: scale(0.96); } to { opacity: 1; transform: scale(1); } }
         @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         .animate-slide-up { animation: slideUp 0.3s ease; }
+        .copy-success {
+            color: #10b981;
+        }
     </style>
 </head>
 <body>
@@ -503,7 +545,17 @@
     <main class="main-content px-4 sm:px-6 pb-16">
         <section id="homeView" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 gap-y-8"></section>
         <section id="subscriptionsView" class="hidden max-w-3xl mx-auto"><h2 class="text-2xl font-black mb-6">Your Subscriptions</h2><div id="mobileSubsList" class="space-y-4"></div><div id="mobileNoSubs" class="text-center py-10 text-slate-400 font-bold hidden">No subscriptions yet</div></section>
-        <section id="channelView" class="hidden max-w-6xl mx-auto"><button onclick="goBackFromChannel()" class="mb-6 flex items-center gap-2 text-slate-500 font-bold"><i class="fa-solid fa-arrow-left"></i> Back</button><div class="flex flex-col md:flex-row items-center gap-8 px-4 mb-12"><div class="relative group"><img id="chanDP" src="" class="w-36 h-36 rounded-full border-4 shadow-xl object-cover" data-id=""><div id="dpEditOverlay" class="absolute inset-0 bg-black/40 rounded-full hidden items-center justify-center text-white cursor-pointer opacity-0 group-hover:opacity-100" onclick="triggerDPUpdate()"><i class="fa-solid fa-camera text-xl"></i></div><input type="file" id="dpUpdateInput" class="hidden" accept="image/*" onchange="handleDPUpdate(this)"></div><div class="flex-1 text-center md:text-left"><h2 id="chanName" class="text-3xl md:text-4xl font-black">...</h2><p id="chanHandle" class="text-slate-500 font-bold mt-2">@handle</p></div><div class="flex gap-4"><button id="uploadBtn" onclick="openUploadModal()" class="hidden bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm">Upload</button><button id="subBtn" onclick="handleSubscription()" class="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm instant-transition">Subscribe</button></div></div><div class="border-b border-slate-100 mb-6"></div><h3 class="text-xl font-black mb-5 px-4">Videos</h3><div id="channelVideoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-4"></div></section>
+        <section id="channelView" class="hidden max-w-6xl mx-auto">
+            <button onclick="goBackFromChannel()" class="mb-6 flex items-center gap-2 text-slate-500 font-bold"><i class="fa-solid fa-arrow-left"></i> Back</button>
+            <div class="flex flex-col md:flex-row items-center gap-8 px-4 mb-12">
+                <div class="relative group"><img id="chanDP" src="" class="w-36 h-36 rounded-full border-4 shadow-xl object-cover" data-id=""><div id="dpEditOverlay" class="absolute inset-0 bg-black/40 rounded-full hidden items-center justify-center text-white cursor-pointer opacity-0 group-hover:opacity-100" onclick="triggerDPUpdate()"><i class="fa-solid fa-camera text-xl"></i></div><input type="file" id="dpUpdateInput" class="hidden" accept="image/*" onchange="handleDPUpdate(this)"></div>
+                <div class="flex-1 text-center md:text-left"><h2 id="chanName" class="text-3xl md:text-4xl font-black">...</h2><p id="chanHandle" class="text-slate-500 font-bold mt-2">@handle</p></div>
+                <div class="flex gap-4 flex-wrap"><button id="uploadBtn" onclick="openUploadModal()" class="hidden bg-blue-600 text-white px-6 py-3 rounded-2xl font-black text-sm">Upload</button><button id="subBtn" onclick="handleSubscription()" class="bg-black text-white px-8 py-3 rounded-2xl font-black text-sm instant-transition">Subscribe</button></div>
+            </div>
+            <div class="border-b border-slate-100 mb-6"></div>
+            <h3 class="text-xl font-black mb-5 px-4">Videos</h3>
+            <div id="channelVideoGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-4"></div>
+        </section>
         
         <section id="studioView" class="hidden max-w-5xl mx-auto space-y-6">
             <div class="bg-white border rounded-2xl p-6 shadow-sm">
@@ -555,7 +607,13 @@
                         </div>
                     </div>
                     <div class="mt-5">
-                        <h1 id="playingTitle" class="text-2xl font-black"></h1>
+                        <div class="flex flex-wrap items-start justify-between gap-3">
+                            <h1 id="playingTitle" class="text-2xl font-black flex-1 min-w-[200px]"></h1>
+                            <!-- Share Link Button -->
+                            <button class="share-link-btn" onclick="copyVideoLink()" id="shareLinkBtn">
+                                <i class="fa-solid fa-link"></i> Share
+                            </button>
+                        </div>
                         <div class="flex flex-wrap items-center justify-between mt-4 gap-3">
                             <div class="flex items-center gap-3">
                                 <img id="playingChanDP" class="w-10 h-10 rounded-full cursor-pointer" onclick="openCreatorFromPlayer()">
@@ -566,6 +624,12 @@
                                 <button onclick="handleLike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-up" id="likeIcon"></i> <span id="likeCount">0</span></button>
                                 <button onclick="handleDislike()" class="flex items-center gap-1 px-3 py-1.5 bg-slate-100 rounded-full transition-all"><i class="fa-regular fa-thumbs-down" id="dislikeIcon"></i></button>
                             </div>
+                        </div>
+                        <!-- Video Link Input for Copy -->
+                        <div class="mt-3 flex items-center gap-2 flex-wrap">
+                            <input type="text" id="videoLinkInput" class="video-link-input" readonly value="">
+                            <button onclick="copyVideoLink()" class="text-blue-600 text-sm font-bold hover:text-blue-700 transition"><i class="fa-regular fa-copy mr-1"></i> Copy</button>
+                            <span id="copyStatus" class="text-xs text-green-600 hidden">✓ Copied!</span>
                         </div>
                         <div class="mt-6 bg-slate-50 rounded-2xl p-5">
                             <h3 class="font-black mb-4">Comments</h3>
@@ -660,7 +724,7 @@
 
         window.creators = []; window.videos = []; window.currentUserData = null; window.currentVideoId = null;
         window.bannerAds = []; window.videoAds = [];
-        window.pendingWithdrawals = []; // track pending withdrawals for this user
+        window.pendingWithdrawals = [];
         let adTimerInterval = null;
         let adSkipEnabled = false;
         let isAdPlaying = false;
@@ -828,8 +892,7 @@
             return ads[Math.floor(Math.random() * ads.length)];
         }
 
-        // --- EARNINGS CALCULATION (with admin override support) ---
-        // Track total pending withdrawal amounts for this user
+        // --- EARNINGS CALCULATION ---
         function getTotalPendingWithdrawals(creatorId) {
             return window.pendingWithdrawals
                 .filter(w => w.creatorId === creatorId && w.status === 'pending')
@@ -841,12 +904,9 @@
             const myVideos = window.videos.filter(v => v.creatorId === creator.id);
             const totalViews = myVideos.reduce((a,v) => a + (v.views || 0), 0);
             const autoEarnings = (creator.subs >= 1000 && creator.watchHours >= 4000) ? (totalViews * 0.002) : 0;
-            // If earningsOverride exists, use it
             let earnings = (creator.earningsOverride !== undefined && creator.earningsOverride !== null) ? creator.earningsOverride : autoEarnings;
-            // Subtract pending withdrawals from earnings
             const pendingTotal = getTotalPendingWithdrawals(creator.id);
-            const availableEarnings = Math.max(0, earnings - pendingTotal);
-            return availableEarnings;
+            return Math.max(0, earnings - pendingTotal);
         }
 
         function updateStudioEarningsDisplay() {
@@ -859,6 +919,32 @@
             } else {
                 badge.classList.add('hidden');
             }
+        }
+
+        // --- SHARE LINK FUNCTION ---
+        window.copyVideoLink = function() {
+            const linkInput = document.getElementById('videoLinkInput');
+            const status = document.getElementById('copyStatus');
+            if (linkInput.value) {
+                navigator.clipboard.writeText(linkInput.value).then(() => {
+                    status.classList.remove('hidden');
+                    setTimeout(() => status.classList.add('hidden'), 2000);
+                    showToast('Link copied to clipboard!', true);
+                }).catch(() => {
+                    // Fallback
+                    linkInput.select();
+                    document.execCommand('copy');
+                    status.classList.remove('hidden');
+                    setTimeout(() => status.classList.add('hidden'), 2000);
+                    showToast('Link copied!', true);
+                });
+            }
+        };
+
+        // Generate video link
+        function generateVideoLink(videoId) {
+            const baseUrl = window.location.href.split('?')[0].split('#')[0];
+            return `${baseUrl}?watch=${videoId}`;
         }
 
         // --- WALLET ---
@@ -915,7 +1001,6 @@
                     status: 'pending',
                     createdAt: new Date().toISOString()
                 });
-                // Add to pending list locally so earnings update immediately
                 window.pendingWithdrawals.push({
                     creatorId: window.currentUserData.id,
                     amount: amount,
@@ -930,7 +1015,7 @@
                 closeModal('walletModal');
                 updateWalletUI();
                 updateStudioEarningsDisplay();
-                updateStudio(); // refresh studio view
+                updateStudio();
             } catch(e) {
                 showToast('Error submitting request: '+e.message);
             }
@@ -966,7 +1051,6 @@
             renderHome();
         });
 
-        // Load pending withdrawals for current user
         onSnapshot(withdrawalCol, (snapshot) => {
             window.pendingWithdrawals = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
             if (window.currentUserData) {
@@ -1020,6 +1104,20 @@
                 handleLogoutUI(); 
             } 
         });
+
+        // Check URL for watch parameter (direct video link)
+        function checkUrlForVideo() {
+            const params = new URLSearchParams(window.location.search);
+            const videoId = params.get('watch');
+            if (videoId) {
+                setTimeout(() => {
+                    const video = window.videos.find(v => v.id === videoId);
+                    if (video) {
+                        window.watchVideo(videoId);
+                    }
+                }, 500);
+            }
+        }
 
         window.processAuth = async () => { 
             const email = document.getElementById('loginEmail').value.trim(); 
@@ -1324,6 +1422,10 @@
             renderVideoDetails(id);
             renderRecommendations(id);
             
+            // Update share link
+            const linkInput = document.getElementById('videoLinkInput');
+            linkInput.value = generateVideoLink(id);
+            
             const ad = getRandomVideoAd();
             if (ad) {
                 playVideoAd(videoEl, ad.adUrl, async () => {
@@ -1354,6 +1456,10 @@
             pBtn.className = `instant-transition ${isSubbed ? 'bg-slate-200 text-black' : 'bg-black text-white'} px-4 py-1.5 rounded-xl font-black text-xs`; 
             const commentsList = document.getElementById('commentsList'); 
             commentsList.innerHTML = (vid.comments||[]).slice().reverse().map(c=>`<div class="flex gap-3"><img src="${c.userDP}" class="w-8 h-8 rounded-full"><div><p class="font-black text-xs">${c.userName}</p><p class="text-sm">${c.text}</p></div></div>`).join('') || '<p class="text-center py-4 text-slate-400">No comments yet</p>'; 
+            
+            // Update share link
+            const linkInput = document.getElementById('videoLinkInput');
+            linkInput.value = generateVideoLink(id);
         }
 
         // --- SEARCH ---
@@ -1403,9 +1509,12 @@
         async function updateMonetizationButton() { if(!window.currentUserData) return; const subs = window.currentUserData.subs || 0; const hours = window.currentUserData.watchHours || 0; const meetsCriteria = (subs >= 1000 && hours >= 4000); const q = query(monetizationCol, where("creatorId", "==", window.currentUserData.id)); const existingSnap = await getDocs(q); let existingReq = null; existingSnap.forEach(d => { existingReq = { id: d.id, ...d.data() }; }); const btn = document.getElementById('monetizationApplyBtn'); const msgDiv = document.getElementById('monetizationStatusMsg'); if(existingReq && existingReq.status === 'approved') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-green-600 font-bold">✅ Monetization Approved! You are earning.</span>'; return; } else if(existingReq && existingReq.status === 'pending') { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-yellow-600">⏳ Request pending. Admin will review.</span>'; return; } else if(existingReq && existingReq.status === 'rejected') { if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply Now'; msgDiv.innerHTML = '<span class="text-red-500">Previously rejected. Apply again.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subs & 4000 hours</span>'; } return; } if(meetsCriteria) { btn.disabled = false; btn.classList.add('apply-btn-active'); btn.classList.remove('apply-btn-inactive'); btn.innerText = 'Apply for Monetization'; msgDiv.innerHTML = '<span class="text-green-600">You qualify! Click Apply to request.</span>'; btn.onclick = async () => { await sendMonetizationRequest(btn, msgDiv, subs, hours); }; } else { btn.disabled = true; btn.classList.add('apply-btn-inactive'); btn.classList.remove('apply-btn-active'); btn.innerText = 'Apply'; msgDiv.innerHTML = '<span class="text-slate-400">Need 1000 subscribers & 4000 watch hours</span>'; } }
         async function sendMonetizationRequest(btn, msgDiv, subs, hours) { if(btn.disabled) return; btn.disabled = true; btn.innerText = 'Submitting...'; try { await addDoc(monetizationCol, { creatorId: window.currentUserData.id, subscribers: subs, watchHours: hours, status: 'pending', requestedAt: new Date().toISOString() }); msgDiv.innerHTML = '<span class="text-green-600">✅ Request sent to admin! You will be notified.</span>'; btn.innerText = 'Requested'; btn.classList.add('apply-btn-inactive'); } catch(e) { console.error(e); showToast("Error submitting request"); btn.disabled = false; btn.innerText = 'Apply for Monetization'; } }
         
-        window.showView = showView; window.openChannel = openChannel; window.triggerDPUpdate = triggerDPUpdate; window.openAuthModal = openAuthModal; window.openUploadModal = openUploadModal; window.closeModal = closeModal; window.openMyChannel = openMyChannel; window.previewImage = previewImage; window.handleFileSelect = handleFileSelect; window.showSubscriptionsView = showSubscriptionsView; window.goBackFromChannel = goBackFromChannel; window.openFullScreenSearch = openFullScreenSearch; window.closeFullScreenSearch = closeFullScreenSearch; window.performFullSearch = performFullSearch; window.clearFullSearch = clearFullSearch; window.openWalletModal = openWalletModal;
+        window.showView = showView; window.openChannel = openChannel; window.triggerDPUpdate = triggerDPUpdate; window.openAuthModal = openAuthModal; window.openUploadModal = openUploadModal; window.closeModal = closeModal; window.openMyChannel = openMyChannel; window.previewImage = previewImage; window.handleFileSelect = handleFileSelect; window.showSubscriptionsView = showSubscriptionsView; window.goBackFromChannel = goBackFromChannel; window.openFullScreenSearch = openFullScreenSearch; window.closeFullScreenSearch = closeFullScreenSearch; window.performFullSearch = performFullSearch; window.clearFullSearch = clearFullSearch; window.openWalletModal = openWalletModal; window.copyVideoLink = copyVideoLink;
         
-        setTimeout(() => renderSidebarBanner(), 500);
+        setTimeout(() => {
+            renderSidebarBanner();
+            checkUrlForVideo();
+        }, 500);
     </script>
 </body>
 </html>
